@@ -4,25 +4,25 @@ using UnityEngine.SceneManagement;
 
 public class ExplosionTrigger : MonoBehaviour
 {
-    [Header("Patlama Ayarlar�")]
-    public GameObject explosionPrefab; // Patlama animasyonu prefab'�
-    public Transform explosionSpawnPoint; // Patlaman�n ��kaca�� yer
-    public float explosionDelay = 0.5f; // Karakterin durmas�ndan sonra bekleme
+    [Header("Patlama Ayarları")]
+    public GameObject explosionPrefab; // Patlama animasyonu prefab'ı
+    public Transform explosionSpawnPoint; // Patlamanın çıkacağı yer
+    public float explosionDelay = 0.5f; // Karakterin durmasından sonra bekleme
 
     [Header("Kamera Efektleri")]
     public bool enableCameraShake = true;
     public float shakeIntensity = 0.3f;
     public float shakeDuration = 0.5f;
 
-    [Header("Sahne Ge�i�i")]
+    [Header("Sahne Geçişi")]
     public bool changeScene = true;
-    public string nextSceneName = "Scene_Past"; // Ge�mi� sahnesinin ad�
-    public float sceneChangeDelay = 3f; // Patlamadan sonra bekleme s�resi
+    public string nextSceneName = "Scene_Past"; // Geçmiş sahnesinin adı
+    public float sceneChangeDelay = 3f; // Patlamadan sonra bekleme süresi
 
     [Header("Ses Efektleri")]
     public AudioClip explosionSound;
 
-    [Header("Fade Efekti (�ste�e Ba�l�)")]
+    [Header("Fade Efekti (İsteğe Bağlı)")]
     public bool useFadeEffect = true;
     public float fadeDuration = 2f;
 
@@ -41,9 +41,32 @@ public class ExplosionTrigger : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        // Sadece Player ile �arp���nca tetikle
+        // Debug için her çarpışmayı logla
+        Debug.Log("Bir şey trigger'a girdi: " + collision.gameObject.name);
+        Debug.Log("Tag: " + collision.tag);
+
+        // Sadece Player ile çarpışınca tetikle
         if (collision.CompareTag("Player") && !hasTriggered)
         {
+            Debug.Log("PLAYER BULUNDU! Patlama başlıyor!");
+            hasTriggered = true;
+            player = collision.gameObject;
+            StartCoroutine(TriggerExplosionSequence());
+        }
+        else if (!collision.CompareTag("Player"))
+        {
+            Debug.LogWarning("Giren obje Player değil! Tag: " + collision.tag);
+        }
+    }
+
+    // Alternatif: Normal collision (trigger çalışmazsa bunu kullan)
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("Collision tespit edildi: " + collision.gameObject.name);
+
+        if (collision.gameObject.CompareTag("Player") && !hasTriggered)
+        {
+            Debug.Log("PLAYER ÇARPTI! Patlama başlıyor!");
             hasTriggered = true;
             player = collision.gameObject;
             StartCoroutine(TriggerExplosionSequence());
@@ -52,63 +75,58 @@ public class ExplosionTrigger : MonoBehaviour
 
     IEnumerator TriggerExplosionSequence()
     {
-        Debug.Log("Patlama sekans� ba�lad�!");
+        Debug.Log("Patlama sekansı başladı!");
 
-        // 1. A�AMA: Karakteri durdur
+        // 1. AŞAMA: Karakteri durdur
         DisablePlayerControls();
 
-        // K�sa bekleme
+        // Kısa bekleme
         yield return new WaitForSeconds(explosionDelay);
 
-        // 2. A�AMA: Patlama efektini spawn et
+        // 2. AŞAMA: Patlama efektini spawn et
         if (explosionPrefab != null)
         {
             Vector3 spawnPos = explosionSpawnPoint != null ? explosionSpawnPoint.position : transform.position;
             GameObject explosion = Instantiate(explosionPrefab, spawnPos, Quaternion.identity);
 
-            // Patlamay� otomatik yok et (animasyon s�resi kadar)
-            Animator anim = explosion.GetComponent<Animator>();
-            if (anim != null)
+            // Particle System'i durdur (tek seferlik oynat, sonra dur)
+            ParticleSystem ps = explosion.GetComponent<ParticleSystem>();
+            if (ps != null)
             {
-                AnimatorClipInfo[] clipInfo = anim.GetCurrentAnimatorClipInfo(0);
-                if (clipInfo.Length > 0)
-                {
-                    float animLength = clipInfo[0].clip.length;
-                    Destroy(explosion, animLength);
-                }
+                var main = ps.main;
+                main.loop = false; // Loop kapalı - bir kez oynat
+                // Patlamayı YOK ETME - ekranda kalsın
             }
-            else
-            {
-                Destroy(explosion, 2f); // Varsay�lan 2 saniye
-            }
+
+            // NOT: Patlama artık silinmiyor, ekranda kalıyor
         }
 
-        // 3. A�AMA: Ses efekti �al
+        // 3. AŞAMA: Ses efekti çal
         if (audioSource != null && explosionSound != null)
         {
             audioSource.PlayOneShot(explosionSound);
         }
 
-        // 4. A�AMA: Kamera sars�nt�s�
+        // 4. AŞAMA: Kamera sarsıntısı
         if (enableCameraShake)
         {
             StartCoroutine(CameraShake());
         }
 
-        // 5. A�AMA: Sahne ge�i�i i�in bekle
+        // 5. AŞAMA: Sahne geçişi için bekle
         yield return new WaitForSeconds(sceneChangeDelay);
 
-        // 6. A�AMA: Sahneyi de�i�tir
+        // 6. AŞAMA: Sahneyi değiştir
         if (changeScene)
         {
             if (useFadeEffect)
             {
-                // Fade efekti ile ge�i� (e�er fade panel varsa)
+                // Fade efekti ile geçiş (eğer fade panel varsa)
                 StartCoroutine(FadeAndLoadScene());
             }
             else
             {
-                // Direkt sahne ge�i�i
+                // Direkt sahne geçişi
                 SceneManager.LoadScene(nextSceneName);
             }
         }
@@ -125,21 +143,21 @@ public class ExplosionTrigger : MonoBehaviour
             pm.enabled = false;
         }
 
-        // Rigidbody h�z�n� s�f�rla
+        // Rigidbody hızını sıfırla
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
         }
 
-        // Animator'� durdur (idle pozisyonunda kal)
+        // Animator'ı durdur (idle pozisyonunda kal)
         Animator anim = player.GetComponent<Animator>();
         if (anim != null)
         {
             anim.SetFloat("Speed", 0);
         }
 
-        Debug.Log("Player kontrolleri devre d��� b�rak�ld�!");
+        Debug.Log("Player kontrolleri devre dışı bırakıldı!");
     }
 
     IEnumerator CameraShake()
@@ -170,8 +188,8 @@ public class ExplosionTrigger : MonoBehaviour
 
     IEnumerator FadeAndLoadScene()
     {
-        // Basit fade efekti (e�er CanvasGroup varsa)
-        // Daha geli�mi� fade i�in ayr� sistem gerekebilir
+        // Basit fade efekti (eğer CanvasGroup varsa)
+        // Daha gelişmiş fade için ayrı sistem gerekebilir
         yield return new WaitForSeconds(fadeDuration);
         SceneManager.LoadScene(nextSceneName);
     }
