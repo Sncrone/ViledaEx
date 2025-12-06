@@ -2,44 +2,68 @@ using UnityEngine;
 
 public class InfiniteBackground : MonoBehaviour
 {
-    private float length, startpos;
-    public GameObject cam;
-    public float parallaxEffect;
+    [Header("Referanslar")]
+    public Transform cam; // Kamera Transform'u (Inspector'dan sürükle)
     
-    // YENİ: Sahnede yan yana kaç tane kopya resim var? (Sen 3 tane yaptın)
-    // Bunu Inspector'dan değiştirebilirsin ama varsayılan 3 olsun.
-    public int cloneCount = 3; 
+    [Header("Parallax Ayarları")]
+    [Range(0f, 1f)]
+    public float parallaxEffect = 0.5f; // 0 = Sabıt kalır, 1 = Kamerayla aynı hızda hareket eder
+    
+    [Header("Arka Plan Ayarları")]
+    public int cloneCount = 3; // Sahnede yan yana kaç tane kopya var? (Senin durumunda 3)
+    
+    private float spriteWidth; // Tek bir sprite'ın genişliği
+    private float startPos; // Bu objenin başlangıç X pozisyonu
 
     void Start()
     {
-        startpos = transform.position.x;
-        // Resmin genişliğini alıyoruz
-        length = GetComponent<SpriteRenderer>().bounds.size.x;
+        // Başlangıç pozisyonunu kaydet
+        startPos = transform.position.x;
+        
+        // Sprite'ın gerçek genişliğini al
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            spriteWidth = sr.bounds.size.x - 0.3f;
+        }
+        else
+        {
+            Debug.LogError("SpriteRenderer bulunamadı! Bu script bir Sprite objesine eklenmeli.");
+        }
+
+        // Kamera referansı yoksa otomatik bul
+        if (cam == null)
+        {
+            cam = Camera.main.transform;
+        }
     }
 
     void Update()
     {
-        // Kameranın parallax efektine göre sanal pozisyonu (Temp)
-        float temp = (cam.transform.position.x * (1 - parallaxEffect));
-        
-        // Objenin ne kadar kayacağı (Dist)
-        float dist = (cam.transform.position.x * parallaxEffect);
+        if (cam == null) return;
 
-        // Hareketi uygula
-        transform.position = new Vector3(startpos + dist, transform.position.y, transform.position.z);
-
-        // MATEMATİK DÜZELTME KISMI:
-        // Eğer resim kameranın görüşünden çıktıysa, onu sadece 1 birim değil,
-        // toplam kopya sayısı kadar (3 birim) uzağa fırlat ki sıranın EN SONUNA geçsin.
+        // Kameranın X pozisyonuna göre parallax hareketi hesapla
+        float parallaxDistance = cam.position.x * parallaxEffect;
         
-        // Sınırı biraz geniş tutuyoruz (length/2 yerine direkt length kullandık ki titreme yapmasın)
-        if (temp > startpos + length) 
+        // Objenin yeni pozisyonunu ayarla
+        transform.position = new Vector3(startPos + parallaxDistance, transform.position.y, transform.position.z);
+
+        // SONSUZ DÖNGÜ KONTROLÜ:
+        // Kameranın parallax'sız takip ettiği sanal pozisyon
+        float cameraRelativePos = cam.position.x * (1 - parallaxEffect);
+        
+        // Toplam döngü uzunluğu (3 sprite yan yana)
+        float loopWidth = spriteWidth * cloneCount;
+
+        // Eğer obje kameranın SAĞ tarafından tamamen çıktıysa
+        if (cameraRelativePos > startPos + spriteWidth)
         {
-            startpos += length * cloneCount; // BURASI DEĞİŞTİ: length yerine (length * 3)
+            startPos += loopWidth; // Objeyi sıranın en sonuna taşı
         }
-        else if (temp < startpos - length) 
+        // Eğer obje kameranın SOL tarafından tamamen çıktıysa
+        else if (cameraRelativePos < startPos - spriteWidth)
         {
-            startpos -= length * cloneCount; // BURASI DEĞİŞTİ
+            startPos -= loopWidth; // Objeyi sıranın en başına taşı
         }
     }
 }
