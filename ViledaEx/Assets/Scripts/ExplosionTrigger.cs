@@ -9,26 +9,22 @@ public class ExplosionTrigger : MonoBehaviour
     public Transform explosionSpawnPoint;
     public float explosionDelay = 0.5f;
 
-    [Header("Kamera Efektleri")]
+    [Header("Kamera Sarsıntısı")]
     public bool enableCameraShake = true;
     public float shakeIntensity = 0.3f;
     public float shakeDuration = 0.5f;
 
-    [Header("Sahne Geçişi")]
-    public bool changeScene = true;
-    public string nextSceneName = "Scene_Past";
-    public float sceneChangeDelay = 3f;
-
-    [Header("Ses Efektleri")]
+    [Header("Ses Efekti")]
     public AudioClip explosionSound;
 
-    [Header("Fade Efekti")]
-    public bool useFadeEffect = true;
-    public float fadeDuration = 2f;
+    [Header("Konuşma Sistemi")]
+    public DialogueSystem dialogueSystem;
+    public float waitBeforeDialogue = 3f; // Düşmeden sonra ne kadar beklensin
 
     private GameObject player;
     private AudioSource audioSource;
     private bool hasTriggered = false;
+    private Vector3 originalPlayerScale;
 
     void Start()
     {
@@ -41,146 +37,157 @@ public class ExplosionTrigger : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Bir şey trigger'a girdi: " + collision.gameObject.name);
-
         if (collision.CompareTag("Player") && !hasTriggered)
         {
-            Debug.Log("PLAYER BULUNDU! Patlama başlıyor!");
             hasTriggered = true;
             player = collision.gameObject;
+            originalPlayerScale = player.transform.localScale;
             StartCoroutine(ExplosionSequence());
         }
     }
 
     IEnumerator ExplosionSequence()
     {
-        Debug.Log("Patlama sekansı başladı!");
+        Debug.Log("=== PATLAMA BAŞLADI ===");
 
         // 1. Karakteri durdur
-        DisablePlayerControls();
+        StopPlayer();
 
         yield return new WaitForSeconds(explosionDelay);
 
-        // 2. Patlama efektini spawn et
-        if (explosionPrefab != null)
-        {
-            Vector3 spawnPos = explosionSpawnPoint != null ? explosionSpawnPoint.position : transform.position;
-            GameObject explosion = Instantiate(explosionPrefab, spawnPos, Quaternion.identity);
+        // 2. Patlama efekti
+        SpawnExplosion();
 
-            ParticleSystem ps = explosion.GetComponent<ParticleSystem>();
-            if (ps != null)
-            {
-                var main = ps.main;
-                main.loop = false;
-                main.stopAction = ParticleSystemStopAction.None;
-            }
-        }
-
-        // 3. Ses efekti çal
-        if (audioSource != null && explosionSound != null)
-        {
-            audioSource.PlayOneShot(explosionSound);
-        }
+        // 3. Ses efekti
+        PlayExplosionSound();
 
         // 4. Kamera sarsıntısı
         if (enableCameraShake)
         {
-            StartCoroutine(CameraShake());
+            StartCoroutine(ShakeCamera());
         }
 
-        // 5. 3 saniye bekle, sonra Idle'a geç
-        yield return new WaitForSeconds(3f);
+        // 5. Bekle (karakter yerde)
+        Debug.Log("Karakter düştü, bekleniyor...");
+        yield return new WaitForSeconds(waitBeforeDialogue);
 
-        ReturnToIdle();
+        // 6. Karakteri kaldır (Idle'a döndür)
+        StandUpPlayer();
 
-        // 6. Sahne geçişi için bekle
-        yield return new WaitForSeconds(sceneChangeDelay);
-
-        // 7. Sahneyi değiştir
-        if (changeScene)
+        // 7. Konuşmaları başlat
+        if (dialogueSystem != null)
         {
-            if (useFadeEffect)
-            {
-                StartCoroutine(FadeAndLoadScene());
-            }
-            else
-            {
-                SceneManager.LoadScene(nextSceneName);
-            }
+            Debug.Log("Konuşmalar başlıyor...");
+            dialogueSystem.StartDialogues();
+
+            // Konuşmalar bitene kadar bekle
+            yield return new WaitUntil(() => dialogueSystem.AreDialoguesFinished());
         }
+
+        // 8. Konuşmalar bitti - Karakteri tekrar kontrol edilebilir yap
+        Debug.Log("Konuşmalar bitti! Kontroller geri veriliyor.");
+        EnablePlayer();
+
+        Debug.Log("=== SEKANS TAMAMLANDI ===");
     }
 
-    void DisablePlayerControls()
+    void StopPlayer()
     {
         if (player == null) return;
 
+        // Hareketi kapat
         PlayerMovement pm = player.GetComponent<PlayerMovement>();
-        if (pm != null)
-        {
-            pm.enabled = false;
-        }
+        if (pm != null) pm.enabled = false;
 
+        // Hızı sıfırla
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector2.zero;
-        }
+        if (rb != null) rb.linearVelocity = Vector2.zero;
 
+        // Düşme animasyonu
         Animator anim = player.GetComponent<Animator>();
         if (anim != null)
         {
             anim.Play("Fall");
         }
 
-        StartCoroutine(ScalePlayerForFall());
+        // Karakteri küçült
+        StartCoroutine(ScalePlayer(0.4f));
 
-        Debug.Log("Player durduruldu ve yere düştü!");
+        Debug.Log("Player durduruldu ve düştü!");
     }
 
-    IEnumerator ScalePlayerForFall()
+    void StandUpPlayer()
+    {
+        if (player == null) return;
+
+        // Eski boyuta döndür
+        player.transform.localScale = originalPlayerScale;
+
+        // Idle animasyonuna geç
+        Animator anim = player.GetComponent<Animator>();
+        if (anim != null)
+        {
+            anim.SetFloat("Speed", 0f);
+            anim.Play("PlayerIdle");
+        }
+
+        Debug.Log("Karakter ayağa kalktı!");
+    }
+
+    void EnablePlayer()
+    {
+        if (player == null) return;
+
+        // Hareketi geri aç
+        PlayerMovement pm = player.GetComponent<PlayerMovement>();
+        if (pm != null) pm.enabled = true;
+
+        Debug.Log("Player kontrolleri aktif!");
+    }
+
+    void SpawnExplosion()
+    {
+        if (explosionPrefab == null) return;
+
+        Vector3 spawnPos = explosionSpawnPoint != null ? explosionSpawnPoint.position : transform.position;
+        GameObject explosion = Instantiate(explosionPrefab, spawnPos, Quaternion.identity);
+
+        ParticleSystem ps = explosion.GetComponent<ParticleSystem>();
+        if (ps != null)
+        {
+            var main = ps.main;
+            main.loop = false;
+            main.stopAction = ParticleSystemStopAction.None;
+        }
+    }
+
+    void PlayExplosionSound()
+    {
+        if (audioSource != null && explosionSound != null)
+        {
+            audioSource.PlayOneShot(explosionSound);
+        }
+    }
+
+    IEnumerator ScalePlayer(float scaleMultiplier)
     {
         if (player == null) yield break;
 
         yield return new WaitForSeconds(0.1f);
 
         player.transform.localScale = new Vector3(
-            player.transform.localScale.x * 0.4f,
-            player.transform.localScale.y * 0.4f,
-            player.transform.localScale.z
+            originalPlayerScale.x * scaleMultiplier,
+            originalPlayerScale.y * scaleMultiplier,
+            originalPlayerScale.z
         );
     }
 
-    void ReturnToIdle()
+    IEnumerator ShakeCamera()
     {
-        if (player == null) return;
+        Camera cam = Camera.main;
+        if (cam == null) yield break;
 
-        // Karakteri eski boyutuna döndür
-        player.transform.localScale = new Vector3(
-            player.transform.localScale.x / 0.4f,  // 0.8 ile çarpmıştık, şimdi böl
-            player.transform.localScale.y / 0.4f,
-            player.transform.localScale.z
-        );
-
-        // Idle animasyonuna geç
-        Animator anim = player.GetComponent<Animator>();
-        if (anim != null)
-        {
-            // Speed'i 0 yap ki Walk'a geçmesin
-            anim.SetFloat("Speed", 0f);
-
-            // Sonra Idle'ı oynat
-            anim.Play("PlayerIdle");
-        }
-
-        Debug.Log("Karakter Idle pozisyonuna döndü ve eski boyutuna geldi!");
-    }
-
-    IEnumerator CameraShake()
-    {
-        Camera mainCam = Camera.main;
-        if (mainCam == null) yield break;
-
-        Vector3 originalPos = mainCam.transform.position;
+        Vector3 originalPos = cam.transform.position;
         float elapsed = 0f;
 
         while (elapsed < shakeDuration)
@@ -188,7 +195,7 @@ public class ExplosionTrigger : MonoBehaviour
             float x = Random.Range(-1f, 1f) * shakeIntensity;
             float y = Random.Range(-1f, 1f) * shakeIntensity;
 
-            mainCam.transform.position = new Vector3(
+            cam.transform.position = new Vector3(
                 originalPos.x + x,
                 originalPos.y + y,
                 originalPos.z
@@ -198,12 +205,6 @@ public class ExplosionTrigger : MonoBehaviour
             yield return null;
         }
 
-        mainCam.transform.position = originalPos;
-    }
-
-    IEnumerator FadeAndLoadScene()
-    {
-        yield return new WaitForSeconds(fadeDuration);
-        SceneManager.LoadScene(nextSceneName);
+        cam.transform.position = originalPos;
     }
 }
