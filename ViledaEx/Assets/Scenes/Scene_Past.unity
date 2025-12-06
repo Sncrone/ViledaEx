@@ -187,6 +187,8 @@ MonoBehaviour:
   dialogueLines:
   - "Tamam reakt\xF6r\xFCn patlama an\u0131na geldik."
   - "Bakal\u0131m ne olmu\u015F?"
+  reactor: {fileID: 0}
+  delayBeforeExplosion: 1
 --- !u!4 &361606930
 Transform:
   m_ObjectHideFlags: 0
@@ -500,6 +502,7 @@ GameObject:
   - component: {fileID: 993731218}
   - component: {fileID: 993731220}
   - component: {fileID: 993731219}
+  - component: {fileID: 993731221}
   m_Layer: 0
   m_Name: ArcReaktor
   m_TagString: Untagged
@@ -596,6 +599,30 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &993731221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 993731217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a15cfe808d215c46868943d4efb4900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BackgroundExplosion
+  backgroundSprite: {fileID: 993731220}
+  gridWidth: 8
+  gridHeight: 6
+  explosionForce: 15
+  pieceLifetime: 3
+  shakeIntensity: 1
+  shakeDuration: 2
+  shakeCount: 3
+  flashOverlay: {fileID: 0}
+  flashDuration: 0.2
+  flashCount: 3
+  delayBeforeExplosion: 0.5
 --- !u!1 &1016170533
 GameObject:
   m_ObjectHideFlags: 0
