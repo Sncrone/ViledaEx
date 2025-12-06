@@ -23,8 +23,16 @@ public class DialogueSystem2 : MonoBehaviour
         "Bakalým ne olmuþ?"
     };
 
+    [Header("Ýkinci Konuþma (Patlama Sonrasý)")]
+    [SerializeField]
+    private string[] postExplosionDialogueLines = new string[]
+    {
+        "Hay aksi! Biraz daha geriye gitmeliyim."
+    };
+
     [Header("Reaktör")]
     [SerializeField] private ReactorDestruction reactor;
+    [SerializeField] private BackgroundExplosion backgroundExplosion;
     [SerializeField] private float delayBeforeExplosion = 1f;
 
     private int currentLine = 0;
@@ -138,10 +146,41 @@ public class DialogueSystem2 : MonoBehaviour
     {
         yield return new WaitForSeconds(delayBeforeExplosion);
 
+        // Önce background patlar
+        if (backgroundExplosion != null)
+        {
+            backgroundExplosion.TriggerExplosion();
+
+            // Patlama bitene kadar bekle (toplam süre hesapla)
+            float explosionDuration = backgroundExplosion.GetTotalExplosionDuration();
+            yield return new WaitForSeconds(explosionDuration);
+
+            // Patlama sonrasý dialogue baþlat
+            StartPostExplosionDialogue();
+        }
+
+        // Sonra reaktör (eðer varsa)
         if (reactor != null)
         {
             reactor.StartDestruction();
         }
+    }
+
+    public void StartPostExplosionDialogue()
+    {
+        // Player'ý durdur
+        if (playerController != null)
+        {
+            playerController.enabled = false;
+        }
+
+        // Ýkinci konuþmayý baþlat
+        dialogueLines = postExplosionDialogueLines;
+        currentLine = 0;
+        dialogueActive = true;
+
+        dialogueBalloon.SetActive(true);
+        ShowLine();
     }
 }
 
