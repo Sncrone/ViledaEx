@@ -41,10 +41,6 @@ public class ExplosionTrigger : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        // Debug için her çarpışmayı logla
-        Debug.Log("Bir şey trigger'a girdi: " + collision.gameObject.name);
-        Debug.Log("Tag: " + collision.tag);
-
         // Sadece Player ile çarpışınca tetikle
         if (collision.CompareTag("Player") && !hasTriggered)
         {
@@ -53,17 +49,11 @@ public class ExplosionTrigger : MonoBehaviour
             player = collision.gameObject;
             StartCoroutine(TriggerExplosionSequence());
         }
-        else if (!collision.CompareTag("Player"))
-        {
-            Debug.LogWarning("Giren obje Player değil! Tag: " + collision.tag);
-        }
     }
 
     // Alternatif: Normal collision (trigger çalışmazsa bunu kullan)
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Collision tespit edildi: " + collision.gameObject.name);
-
         if (collision.gameObject.CompareTag("Player") && !hasTriggered)
         {
             Debug.Log("PLAYER ÇARPTI! Patlama başlıyor!");
@@ -89,16 +79,16 @@ public class ExplosionTrigger : MonoBehaviour
             Vector3 spawnPos = explosionSpawnPoint != null ? explosionSpawnPoint.position : transform.position;
             GameObject explosion = Instantiate(explosionPrefab, spawnPos, Quaternion.identity);
 
-            // Particle System'i durdur (tek seferlik oynat, sonra dur)
+            // Particle System ayarları
             ParticleSystem ps = explosion.GetComponent<ParticleSystem>();
             if (ps != null)
             {
                 var main = ps.main;
                 main.loop = false; // Loop kapalı - bir kez oynat
-                // Patlamayı YOK ETME - ekranda kalsın
+                // Not: stopAction None olduğu için patlama objesi sahnede kalacaktır.
+                // Sahne değişeceği için sorun değil ama normalde Destroy etmek iyidir.
+                main.stopAction = ParticleSystemStopAction.None;
             }
-
-            // NOT: Patlama artık silinmiyor, ekranda kalıyor
         }
 
         // 3. AŞAMA: Ses efekti çal
@@ -121,22 +111,22 @@ public class ExplosionTrigger : MonoBehaviour
         {
             if (useFadeEffect)
             {
-                // Fade efekti ile geçiş (eğer fade panel varsa)
                 StartCoroutine(FadeAndLoadScene());
             }
             else
             {
-                // Direkt sahne geçişi
                 SceneManager.LoadScene(nextSceneName);
             }
         }
     }
 
+    // DÜZELTİLEN METOT BURASI
     void DisablePlayerControls()
     {
         if (player == null) return;
 
-        // Player hareketini durdur
+        // Player hareketini durdur (Script adınızın PlayerMovement olduğundan emin olun)
+        // Eğer farklıysa burayı kendi script adınızla değiştirin.
         PlayerMovement pm = player.GetComponent<PlayerMovement>();
         if (pm != null)
         {
@@ -148,17 +138,38 @@ public class ExplosionTrigger : MonoBehaviour
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f; // Dönmeyi de durdurmak iyi olabilir.
         }
 
-        // Animator'ı durdur (idle pozisyonunda kal)
+        // Yere düşme animasyonunu oynat
         Animator anim = player.GetComponent<Animator>();
         if (anim != null)
         {
-            anim.SetFloat("Speed", 0);
+            // Animator'daki state adı "Fall" olmalı
+            anim.Play("Fall");
         }
 
-        Debug.Log("Player kontrolleri devre dışı bırakıldı!");
+        // Fall animasyonu için karakter boyutunu küçült
+        StartCoroutine(ScalePlayerForFall());
+
+        // Hatalı yerdeki Debug.Log buraya taşındı.
+        Debug.Log("Player durduruldu ve yere düştü!");
     }
+
+    IEnumerator ScalePlayerForFall()
+    {
+        if (player == null) yield break;
+
+        // Kısa bir bekleme (animasyon başlasın)
+        yield return new WaitForSeconds(0.1f);
+
+        // Karakteri küçült (örnek: %80)
+        player.transform.localScale = new Vector3(
+            player.transform.localScale.x * 0.4f,
+            player.transform.localScale.y * 0.4f,
+            player.transform.localScale.z
+        );
+    } // BURADAKİ FAZLALIKLAR TEMİZLENDİ
 
     IEnumerator CameraShake()
     {
@@ -188,8 +199,10 @@ public class ExplosionTrigger : MonoBehaviour
 
     IEnumerator FadeAndLoadScene()
     {
-        // Basit fade efekti (eğer CanvasGroup varsa)
-        // Daha gelişmiş fade için ayrı sistem gerekebilir
+        // Not: Burada gerçek bir fade işlemi yok, sadece bekleyip sahne yüklüyor.
+        // Eğer fade istiyorsanız bir UI Canvas paneli ve onun alpha değerini
+        // değiştiren bir kod eklemeniz gerekir.
+        Debug.Log("Fade efekti süresi bekleniyor...");
         yield return new WaitForSeconds(fadeDuration);
         SceneManager.LoadScene(nextSceneName);
     }
