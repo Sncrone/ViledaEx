@@ -107,8 +107,13 @@
   <Project Path="Unity.RenderPipeline.Universal.ShaderLibrary.csproj" />
   <Project Path="Unity.AI.Assistant.Bridge.Editor.csproj" />
   <Project Path="Unity.AI.Toolkit.Asset.csproj" />
+<<<<<<< Updated upstream
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Unity.Serialization.Editor.csproj" />
+=======
+  <Project Path="Unity.Serialization.Editor.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+>>>>>>> Stashed changes
   <Project Path="Unity.AI.Assistant.AvatarHelper.Editor.csproj" />
   <Project Path="Unity.AI.Animate.Motion.Runtime.csproj" />
   <Project Path="Unity.InputSystem.DocCodeSamples.csproj" />
