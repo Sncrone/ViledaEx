@@ -44,11 +44,11 @@ TagManager:
   - name: far-buildings
     uniqueID: 3297742507
     locked: 0
-  - name: foreground
-    uniqueID: 692691263
-    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: foreground
+    uniqueID: 692691263
     locked: 0
   - name: player
     uniqueID: 1000646911
