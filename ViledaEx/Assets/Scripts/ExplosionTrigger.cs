@@ -5,30 +5,26 @@ using UnityEngine.SceneManagement;
 public class ExplosionTrigger : MonoBehaviour
 {
     [Header("Patlama Ayarları")]
-    public GameObject explosionPrefab; // Patlama animasyonu prefab'ı
-    public Transform explosionSpawnPoint; // Patlamanın çıkacağı yer
-    public float explosionDelay = 0.5f; // Karakterin durmasından sonra bekleme
+    public GameObject explosionPrefab;
+    public Transform explosionSpawnPoint;
+    public float explosionDelay = 0.5f;
 
-    [Header("Kamera Efektleri")]
+    [Header("Kamera Sarsıntısı")]
     public bool enableCameraShake = true;
     public float shakeIntensity = 0.3f;
     public float shakeDuration = 0.5f;
 
-    [Header("Sahne Geçişi")]
-    public bool changeScene = true;
-    public string nextSceneName = "Scene_Past"; // Geçmiş sahnesinin adı
-    public float sceneChangeDelay = 3f; // Patlamadan sonra bekleme süresi
-
-    [Header("Ses Efektleri")]
+    [Header("Ses Efekti")]
     public AudioClip explosionSound;
 
-    [Header("Fade Efekti (İsteğe Bağlı)")]
-    public bool useFadeEffect = true;
-    public float fadeDuration = 2f;
+    [Header("Konuşma Sistemi")]
+    public DialogueSystem dialogueSystem;
+    public float waitBeforeDialogue = 3f; // Düşmeden sonra ne kadar beklensin
 
     private GameObject player;
     private AudioSource audioSource;
     private bool hasTriggered = false;
+    private Vector3 originalPlayerScale;
 
     void Start()
     {
@@ -41,142 +37,157 @@ public class ExplosionTrigger : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        // Sadece Player ile çarpışınca tetikle
         if (collision.CompareTag("Player") && !hasTriggered)
         {
-            Debug.Log("PLAYER BULUNDU! Patlama başlıyor!");
             hasTriggered = true;
             player = collision.gameObject;
-            StartCoroutine(TriggerExplosionSequence());
+            originalPlayerScale = player.transform.localScale;
+            StartCoroutine(ExplosionSequence());
         }
     }
 
-    // Alternatif: Normal collision (trigger çalışmazsa bunu kullan)
-    void OnCollisionEnter2D(Collision2D collision)
+    IEnumerator ExplosionSequence()
     {
-        if (collision.gameObject.CompareTag("Player") && !hasTriggered)
-        {
-            Debug.Log("PLAYER ÇARPTI! Patlama başlıyor!");
-            hasTriggered = true;
-            player = collision.gameObject;
-            StartCoroutine(TriggerExplosionSequence());
-        }
-    }
+        Debug.Log("=== PATLAMA BAŞLADI ===");
 
-    IEnumerator TriggerExplosionSequence()
-    {
-        Debug.Log("Patlama sekansı başladı!");
+        // 1. Karakteri durdur
+        StopPlayer();
 
-        // 1. AŞAMA: Karakteri durdur
-        DisablePlayerControls();
-
-        // Kısa bekleme
         yield return new WaitForSeconds(explosionDelay);
 
-        // 2. AŞAMA: Patlama efektini spawn et
-        if (explosionPrefab != null)
-        {
-            Vector3 spawnPos = explosionSpawnPoint != null ? explosionSpawnPoint.position : transform.position;
-            GameObject explosion = Instantiate(explosionPrefab, spawnPos, Quaternion.identity);
+        // 2. Patlama efekti
+        SpawnExplosion();
 
-            // Particle System ayarları
-            ParticleSystem ps = explosion.GetComponent<ParticleSystem>();
-            if (ps != null)
-            {
-                var main = ps.main;
-                main.loop = false; // Loop kapalı - bir kez oynat
-                // Not: stopAction None olduğu için patlama objesi sahnede kalacaktır.
-                // Sahne değişeceği için sorun değil ama normalde Destroy etmek iyidir.
-                main.stopAction = ParticleSystemStopAction.None;
-            }
+        // 3. Ses efekti
+        PlayExplosionSound();
+
+        // 4. Kamera sarsıntısı
+        if (enableCameraShake)
+        {
+            StartCoroutine(ShakeCamera());
         }
 
-        // 3. AŞAMA: Ses efekti çal
+        // 5. Bekle (karakter yerde)
+        Debug.Log("Karakter düştü, bekleniyor...");
+        yield return new WaitForSeconds(waitBeforeDialogue);
+
+        // 6. Karakteri kaldır (Idle'a döndür)
+        StandUpPlayer();
+
+        // 7. Konuşmaları başlat
+        if (dialogueSystem != null)
+        {
+            Debug.Log("Konuşmalar başlıyor...");
+            dialogueSystem.StartDialogues();
+
+            // Konuşmalar bitene kadar bekle
+            yield return new WaitUntil(() => dialogueSystem.AreDialoguesFinished());
+        }
+
+        // 8. Konuşmalar bitti - Karakteri tekrar kontrol edilebilir yap
+        Debug.Log("Konuşmalar bitti! Kontroller geri veriliyor.");
+        EnablePlayer();
+
+        Debug.Log("=== SEKANS TAMAMLANDI ===");
+    }
+
+    void StopPlayer()
+    {
+        if (player == null) return;
+
+        // Hareketi kapat
+        PlayerMovement pm = player.GetComponent<PlayerMovement>();
+        if (pm != null) pm.enabled = false;
+
+        // Hızı sıfırla
+        Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
+        if (rb != null) rb.linearVelocity = Vector2.zero;
+
+        // Düşme animasyonu
+        Animator anim = player.GetComponent<Animator>();
+        if (anim != null)
+        {
+            anim.Play("Fall");
+        }
+
+        // Karakteri küçült
+        StartCoroutine(ScalePlayer(0.4f));
+
+        Debug.Log("Player durduruldu ve düştü!");
+    }
+
+    void StandUpPlayer()
+    {
+        if (player == null) return;
+
+        // Eski boyuta döndür
+        player.transform.localScale = originalPlayerScale;
+
+        // Idle animasyonuna geç
+        Animator anim = player.GetComponent<Animator>();
+        if (anim != null)
+        {
+            anim.SetFloat("Speed", 0f);
+            anim.Play("PlayerIdle");
+        }
+
+        Debug.Log("Karakter ayağa kalktı!");
+    }
+
+    void EnablePlayer()
+    {
+        if (player == null) return;
+
+        // Hareketi geri aç
+        PlayerMovement pm = player.GetComponent<PlayerMovement>();
+        if (pm != null) pm.enabled = true;
+
+        Debug.Log("Player kontrolleri aktif!");
+    }
+
+    void SpawnExplosion()
+    {
+        if (explosionPrefab == null) return;
+
+        Vector3 spawnPos = explosionSpawnPoint != null ? explosionSpawnPoint.position : transform.position;
+        GameObject explosion = Instantiate(explosionPrefab, spawnPos, Quaternion.identity);
+
+        ParticleSystem ps = explosion.GetComponent<ParticleSystem>();
+        if (ps != null)
+        {
+            var main = ps.main;
+            main.loop = false;
+            main.stopAction = ParticleSystemStopAction.None;
+        }
+    }
+
+    void PlayExplosionSound()
+    {
         if (audioSource != null && explosionSound != null)
         {
             audioSource.PlayOneShot(explosionSound);
         }
-
-        // 4. AŞAMA: Kamera sarsıntısı
-        if (enableCameraShake)
-        {
-            StartCoroutine(CameraShake());
-        }
-
-        // 5. AŞAMA: Sahne geçişi için bekle
-        yield return new WaitForSeconds(sceneChangeDelay);
-
-        // 6. AŞAMA: Sahneyi değiştir
-        if (changeScene)
-        {
-            if (useFadeEffect)
-            {
-                StartCoroutine(FadeAndLoadScene());
-            }
-            else
-            {
-                SceneManager.LoadScene(nextSceneName);
-            }
-        }
     }
 
-    // DÜZELTİLEN METOT BURASI
-    void DisablePlayerControls()
-    {
-        if (player == null) return;
-
-        // Player hareketini durdur (Script adınızın PlayerMovement olduğundan emin olun)
-        // Eğer farklıysa burayı kendi script adınızla değiştirin.
-        PlayerMovement pm = player.GetComponent<PlayerMovement>();
-        if (pm != null)
-        {
-            pm.enabled = false;
-        }
-
-        // Rigidbody hızını sıfırla
-        Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector2.zero;
-            rb.angularVelocity = 0f; // Dönmeyi de durdurmak iyi olabilir.
-        }
-
-        // Yere düşme animasyonunu oynat
-        Animator anim = player.GetComponent<Animator>();
-        if (anim != null)
-        {
-            // Animator'daki state adı "Fall" olmalı
-            anim.Play("Fall");
-        }
-
-        // Fall animasyonu için karakter boyutunu küçült
-        StartCoroutine(ScalePlayerForFall());
-
-        // Hatalı yerdeki Debug.Log buraya taşındı.
-        Debug.Log("Player durduruldu ve yere düştü!");
-    }
-
-    IEnumerator ScalePlayerForFall()
+    IEnumerator ScalePlayer(float scaleMultiplier)
     {
         if (player == null) yield break;
 
-        // Kısa bir bekleme (animasyon başlasın)
         yield return new WaitForSeconds(0.1f);
 
-        // Karakteri küçült (örnek: %80)
         player.transform.localScale = new Vector3(
-            player.transform.localScale.x * 0.4f,
-            player.transform.localScale.y * 0.4f,
-            player.transform.localScale.z
+            originalPlayerScale.x * scaleMultiplier,
+            originalPlayerScale.y * scaleMultiplier,
+            originalPlayerScale.z
         );
-    } // BURADAKİ FAZLALIKLAR TEMİZLENDİ
+    }
 
-    IEnumerator CameraShake()
+    IEnumerator ShakeCamera()
     {
-        Camera mainCam = Camera.main;
-        if (mainCam == null) yield break;
+        Camera cam = Camera.main;
+        if (cam == null) yield break;
 
-        Vector3 originalPos = mainCam.transform.position;
+        Vector3 originalPos = cam.transform.position;
         float elapsed = 0f;
 
         while (elapsed < shakeDuration)
@@ -184,7 +195,7 @@ public class ExplosionTrigger : MonoBehaviour
             float x = Random.Range(-1f, 1f) * shakeIntensity;
             float y = Random.Range(-1f, 1f) * shakeIntensity;
 
-            mainCam.transform.position = new Vector3(
+            cam.transform.position = new Vector3(
                 originalPos.x + x,
                 originalPos.y + y,
                 originalPos.z
@@ -194,16 +205,6 @@ public class ExplosionTrigger : MonoBehaviour
             yield return null;
         }
 
-        mainCam.transform.position = originalPos;
-    }
-
-    IEnumerator FadeAndLoadScene()
-    {
-        // Not: Burada gerçek bir fade işlemi yok, sadece bekleyip sahne yüklüyor.
-        // Eğer fade istiyorsanız bir UI Canvas paneli ve onun alpha değerini
-        // değiştiren bir kod eklemeniz gerekir.
-        Debug.Log("Fade efekti süresi bekleniyor...");
-        yield return new WaitForSeconds(fadeDuration);
-        SceneManager.LoadScene(nextSceneName);
+        cam.transform.position = originalPos;
     }
 }
