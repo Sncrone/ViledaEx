@@ -38,6 +38,7 @@ public class DialogueSystem2 : MonoBehaviour
     private int currentLine = 0;
     private bool isTyping = false;
     private bool dialogueActive = false;
+    private bool isPostExplosionDialogue = false; // Hangi dialogue olduðunu takip et
     private MonoBehaviour playerController;
 
     void Start()
@@ -78,6 +79,7 @@ public class DialogueSystem2 : MonoBehaviour
     {
         dialogueActive = true;
         currentLine = 0;
+        isPostExplosionDialogue = false; // Ýlk dialogue
 
         // Player'ý durdur
         if (playerController != null)
@@ -138,8 +140,12 @@ public class DialogueSystem2 : MonoBehaviour
             playerController.enabled = true;
         }
 
-        // Reaktörü patlat
-        StartCoroutine(TriggerReactorExplosion());
+        // Sadece ilk dialogue bittiyse patlamayý tetikle
+        if (!isPostExplosionDialogue)
+        {
+            StartCoroutine(TriggerReactorExplosion());
+        }
+        // Ýkinci dialogue bittiyse hiçbir þey yapma (döngüye girmesin)
     }
 
     IEnumerator TriggerReactorExplosion()
@@ -178,6 +184,7 @@ public class DialogueSystem2 : MonoBehaviour
         dialogueLines = postExplosionDialogueLines;
         currentLine = 0;
         dialogueActive = true;
+        isPostExplosionDialogue = true; // Ýkinci dialogue olduðunu iþaretle
 
         dialogueBalloon.SetActive(true);
         ShowLine();
