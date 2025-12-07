@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b57158b4e1b2e40a98ae35e5229ba69f
+guid: 9bed00ba4eb30b8488cd3c9bc129ceba
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3406425062075856593
-    second: WhatsApp Image 2025-12-06 at 19.49.29_0
+      213: 6250957832764068116
+    second: hammer-toolbox-repair-game-pixel-art-illustration-vector-Photoroom_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: WhatsApp Image 2025-12-06 at 19.49.29_0
+      name: hammer-toolbox-repair-game-pixel-art-illustration-vector-Photoroom_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1600
-        height: 893
+        x: 141
+        y: 251
+        width: 687
+        height: 478
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1d6f403cb8d064f20800000000000000
-      internalID: 3406425062075856593
+      spriteID: 41119d7a70ddfb650800000000000000
+      internalID: 6250957832764068116
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5ebbea64a9b994346b1c6a47ac3da91f
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -133,11 +133,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      WhatsApp Image 2025-12-06 at 19.49.29_0: 3406425062075856593
+      hammer-toolbox-repair-game-pixel-art-illustration-vector-Photoroom_0: 6250957832764068116
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
