@@ -1,36 +1,36 @@
-using UnityEngine;
+/*using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 
-// Basit Dialogue Sistemi - Mevcut baloncuðu kullanýr
+// Basit Dialogue Sistemi - Mevcut baloncuï¿½u kullanï¿½r
 public class DialogueSystem2 : MonoBehaviour
 {
     [Header("Referanslar")]
-    [SerializeField] private GameObject dialogueBalloon; // Senin baloncuðun
+    [SerializeField] private GameObject dialogueBalloon; // Senin baloncuï¿½un
     [SerializeField] private TextMeshProUGUI dialogueText; // Baloncuktaki text
     [SerializeField] private GameObject player; // Player objesi
 
-    [Header("Daktilo Ayarlarý")]
+    [Header("Daktilo Ayarlarï¿½")]
     [SerializeField] private float typingSpeed = 0.05f;
 
-    [Header("Konuþmalar")]
+    [Header("Konuï¿½malar")]
     [SerializeField]
     private string[] dialogueLines = new string[]
     {
-        "Tamam reaktörün patlama anýna geldik.",
-        "Bakalým ne olmuþ?"
+        "Tamam reaktï¿½rï¿½n patlama anï¿½na geldik.",
+        "Bakalï¿½m ne olmuï¿½?"
     };
 
-    [Header("Ýkinci Konuþma (Patlama Sonrasý)")]
+    [Header("ï¿½kinci Konuï¿½ma (Patlama Sonrasï¿½)")]
     [SerializeField]
     private string[] postExplosionDialogueLines = new string[]
     {
         "Hay aksi! Biraz daha geriye gitmeliyim."
     };
 
-    [Header("Reaktör")]
+    [Header("Reaktï¿½r")]
     [SerializeField] private ReactorDestruction reactor;
     [SerializeField] private BackgroundExplosion backgroundExplosion;
     [SerializeField] private float delayBeforeExplosion = 1f;
@@ -38,7 +38,7 @@ public class DialogueSystem2 : MonoBehaviour
     private int currentLine = 0;
     private bool isTyping = false;
     private bool dialogueActive = false;
-    private bool isPostExplosionDialogue = false; // Hangi dialogue olduðunu takip et
+    private bool isPostExplosionDialogue = false; // Hangi dialogue olduï¿½unu takip et
     private MonoBehaviour playerController;
 
     void Start()
@@ -46,10 +46,10 @@ public class DialogueSystem2 : MonoBehaviour
         // PlayerMovement scriptini bul
         playerController = player.GetComponent("PlayerMovement") as MonoBehaviour;
 
-        // Baloncuðu gizle
+        // Baloncuï¿½u gizle
         dialogueBalloon.SetActive(false);
 
-        // Dialogue'u baþlat
+        // Dialogue'u baï¿½lat
         StartDialogue();
     }
 
@@ -57,19 +57,19 @@ public class DialogueSystem2 : MonoBehaviour
     {
         if (!dialogueActive) return;
 
-        // Space tuþu kontrolü
+        // Space tuï¿½u kontrolï¿½
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (isTyping)
             {
-                // Yazmayý atla
+                // Yazmayï¿½ atla
                 StopAllCoroutines();
                 dialogueText.text = dialogueLines[currentLine];
                 isTyping = false;
             }
             else
             {
-                // Sonraki satýra geç
+                // Sonraki satï¿½ra geï¿½
                 NextLine();
             }
         }
@@ -79,18 +79,18 @@ public class DialogueSystem2 : MonoBehaviour
     {
         dialogueActive = true;
         currentLine = 0;
-        isPostExplosionDialogue = false; // Ýlk dialogue
+        isPostExplosionDialogue = false; // ï¿½lk dialogue
 
-        // Player'ý durdur
+        // Player'ï¿½ durdur
         if (playerController != null)
         {
             playerController.enabled = false;
         }
 
-        // Baloncuðu göster
+        // Baloncuï¿½u gï¿½ster
         dialogueBalloon.SetActive(true);
 
-        // Ýlk satýrý göster
+        // ï¿½lk satï¿½rï¿½ gï¿½ster
         ShowLine();
     }
 
@@ -131,41 +131,41 @@ public class DialogueSystem2 : MonoBehaviour
     {
         dialogueActive = false;
 
-        // Baloncuðu gizle
+        // Baloncuï¿½u gizle
         dialogueBalloon.SetActive(false);
 
-        // Player'ý aktif et
+        // Player'ï¿½ aktif et
         if (playerController != null)
         {
             playerController.enabled = true;
         }
 
-        // Sadece ilk dialogue bittiyse patlamayý tetikle
+        // Sadece ilk dialogue bittiyse patlamayï¿½ tetikle
         if (!isPostExplosionDialogue)
         {
             StartCoroutine(TriggerReactorExplosion());
         }
-        // Ýkinci dialogue bittiyse hiçbir þey yapma (döngüye girmesin)
+        // ï¿½kinci dialogue bittiyse hiï¿½bir ï¿½ey yapma (dï¿½ngï¿½ye girmesin)
     }
 
     IEnumerator TriggerReactorExplosion()
     {
         yield return new WaitForSeconds(delayBeforeExplosion);
 
-        // Önce background patlar
+        // ï¿½nce background patlar
         if (backgroundExplosion != null)
         {
             backgroundExplosion.TriggerExplosion();
 
-            // Patlama bitene kadar bekle (toplam süre hesapla)
+            // Patlama bitene kadar bekle (toplam sï¿½re hesapla)
             float explosionDuration = backgroundExplosion.GetTotalExplosionDuration();
             yield return new WaitForSeconds(explosionDuration);
 
-            // Patlama sonrasý dialogue baþlat
+            // Patlama sonrasï¿½ dialogue baï¿½lat
             StartPostExplosionDialogue();
         }
 
-        // Sonra reaktör (eðer varsa)
+        // Sonra reaktï¿½r (eï¿½er varsa)
         if (reactor != null)
         {
             reactor.StartDestruction();
@@ -174,34 +174,34 @@ public class DialogueSystem2 : MonoBehaviour
 
     public void StartPostExplosionDialogue()
     {
-        // Player'ý durdur
+        // Player'ï¿½ durdur
         if (playerController != null)
         {
             playerController.enabled = false;
         }
 
-        // Ýkinci konuþmayý baþlat
+        // ï¿½kinci konuï¿½mayï¿½ baï¿½lat
         dialogueLines = postExplosionDialogueLines;
         currentLine = 0;
         dialogueActive = true;
-        isPostExplosionDialogue = true; // Ýkinci dialogue olduðunu iþaretle
+        isPostExplosionDialogue = true; // ï¿½kinci dialogue olduï¿½unu iï¿½aretle
 
         dialogueBalloon.SetActive(true);
         ShowLine();
     }
 }
 
-// Reaktör yýkýlma sistemi
+// Reaktï¿½r yï¿½kï¿½lma sistemi
 public class ReactorDestruction : MonoBehaviour
 {
-    [Header("Yýkýlma Ayarlarý")]
+    [Header("Yï¿½kï¿½lma Ayarlarï¿½")]
     [SerializeField] private float destructionDelay = 2f;
     [SerializeField] private GameObject debrisPrefab;
     [SerializeField] private int debrisCount = 20;
     [SerializeField] private float explosionForce = 10f;
     [SerializeField] private float debrisLifetime = 3f;
 
-    [Header("Çatlak Sistemi")]
+    [Header("ï¿½atlak Sistemi")]
     [SerializeField] private List<SpriteRenderer> crackSprites;
     [SerializeField] private float crackInterval = 0.5f;
 
@@ -209,7 +209,7 @@ public class ReactorDestruction : MonoBehaviour
     [SerializeField] private float shakeIntensity = 0.5f;
     [SerializeField] private float shakeDuration = 2f;
 
-    [Header("Partiküller")]
+    [Header("Partikï¿½ller")]
     [SerializeField] private ParticleSystem smokeParticles;
     [SerializeField] private ParticleSystem explosionParticles;
 
@@ -237,6 +237,334 @@ public class ReactorDestruction : MonoBehaviour
     {
         if (smokeParticles != null)
             smokeParticles.Play();
+
+        yield return StartCoroutine(ShowCracks());
+
+        StartCoroutine(CameraShake());
+
+        yield return new WaitForSeconds(destructionDelay);
+
+        if (explosionParticles != null)
+            explosionParticles.Play();
+
+        SpawnDebris();
+
+        if (mainRenderer != null)
+            mainRenderer.enabled = false;
+
+        yield return new WaitForSeconds(debrisLifetime);
+        Destroy(gameObject);
+    }
+
+    private IEnumerator ShowCracks()
+    {
+        foreach (var crack in crackSprites)
+        {
+            if (crack != null)
+            {
+                crack.enabled = true;
+                yield return new WaitForSeconds(crackInterval);
+            }
+        }
+    }
+
+    private void SpawnDebris()
+    {
+        if (debrisPrefab == null) return;
+
+        for (int i = 0; i < debrisCount; i++)
+        {
+            Vector2 offset = Random.insideUnitCircle * 2f;
+            Vector3 spawnPos = transform.position + new Vector3(offset.x, offset.y, 0);
+
+            GameObject debris = Instantiate(debrisPrefab, spawnPos, Quaternion.identity);
+
+            Rigidbody2D rb = debris.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                Vector2 direction = (spawnPos - transform.position).normalized;
+                rb.AddForce(direction * explosionForce, ForceMode2D.Impulse);
+                rb.angularVelocity = Random.Range(-360f, 360f);
+            }
+
+            Destroy(debris, debrisLifetime);
+        }
+    }
+
+    private IEnumerator CameraShake()
+    {
+        if (mainCamera == null) yield break;
+
+        Vector3 originalPos = mainCamera.transform.position;
+        float elapsed = 0f;
+
+        while (elapsed < shakeDuration)
+        {
+            float x = Random.Range(-1f, 1f) * shakeIntensity;
+            float y = Random.Range(-1f, 1f) * shakeIntensity;
+
+            mainCamera.transform.position = new Vector3(
+                originalPos.x + x,
+                originalPos.y + y,
+                originalPos.z
+            );
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        mainCamera.transform.position = originalPos;
+    }
+}*/
+using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+
+// Basit Dialogue Sistemi - Mevcut baloncuÄŸu kullanÄ±r
+public class DialogueSystem2 : MonoBehaviour
+{
+    [Header("Referanslar")]
+    [SerializeField] private GameObject dialogueBalloon;
+    [SerializeField] private TextMeshProUGUI dialogueText;
+    [SerializeField] private GameObject player;
+
+    [Header("Daktilo AyarlarÄ±")]
+    [SerializeField] private float typingSpeed = 0.05f;
+
+    [Header("KonuÅŸmalar")]
+    [SerializeField]
+    private string[] dialogueLines = new string[]
+    {
+        "Tamam reaktÃ¶rÃ¼n patlama anÄ±na geldik.",
+        "BakalÄ±m ne olmuÅŸ?"
+    };
+
+    [Header("Ä°kinci KonuÅŸma (Patlama SonrasÄ±)")]
+    [SerializeField]
+    private string[] postExplosionDialogueLines = new string[]
+    {
+        "Hay aksi! Biraz daha geriye gitmeliyim."
+    };
+
+    [Header("ReaktÃ¶r")]
+    [SerializeField] private ReactorDestruction reactor;
+    [SerializeField] private BackgroundExplosion backgroundExplosion;
+    [SerializeField] private float delayBeforeExplosion = 1f;
+
+    [Header("Ses")]
+    [SerializeField] private AudioClip dialogueSound;
+    [SerializeField] private float dialogueSoundVolume = 0.3f;
+
+    private AudioSource audioSource;
+    private int currentLine = 0;
+    private bool isTyping = false;
+    private bool dialogueActive = false;
+    private bool isPostExplosionDialogue = false;
+    private MonoBehaviour playerController;
+
+    void Start()
+    {
+        playerController = player.GetComponent("PlayerMovement") as MonoBehaviour;
+
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
+
+        dialogueBalloon.SetActive(false);
+
+        StartDialogue();
+    }
+
+    void Update()
+    {
+        if (!dialogueActive) return;
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (isTyping)
+            {
+                StopAllCoroutines();
+                dialogueText.text = dialogueLines[currentLine];
+                isTyping = false;
+            }
+            else
+            {
+                NextLine();
+            }
+        }
+    }
+
+    void StartDialogue()
+    {
+        dialogueActive = true;
+        currentLine = 0;
+        isPostExplosionDialogue = false;
+
+        if (playerController != null)
+        {
+            playerController.enabled = false;
+        }
+
+        dialogueBalloon.SetActive(true);
+
+        ShowLine();
+    }
+
+    void ShowLine()
+    {
+        StartCoroutine(TypeLine(dialogueLines[currentLine]));
+    }
+
+    IEnumerator TypeLine(string line)
+    {
+        isTyping = true;
+        dialogueText.text = "";
+
+        foreach (char letter in line)
+        {
+            dialogueText.text += letter;
+
+            if (dialogueSound != null && audioSource != null && letter != ' ')
+            {
+                audioSource.PlayOneShot(dialogueSound, dialogueSoundVolume);
+            }
+
+            yield return new WaitForSeconds(typingSpeed);
+        }
+
+        isTyping = false;
+    }
+
+    void NextLine()
+    {
+        currentLine++;
+
+        if (currentLine < dialogueLines.Length)
+        {
+            ShowLine();
+        }
+        else
+        {
+            EndDialogue();
+        }
+    }
+
+    void EndDialogue()
+    {
+        dialogueActive = false;
+
+        dialogueBalloon.SetActive(false);
+
+        if (playerController != null)
+        {
+            playerController.enabled = true;
+        }
+
+        if (!isPostExplosionDialogue)
+        {
+            StartCoroutine(TriggerReactorExplosion());
+        }
+    }
+
+    IEnumerator TriggerReactorExplosion()
+    {
+        yield return new WaitForSeconds(delayBeforeExplosion);
+
+        if (backgroundExplosion != null)
+        {
+            backgroundExplosion.TriggerExplosion();
+
+            float explosionDuration = backgroundExplosion.GetTotalExplosionDuration();
+            yield return new WaitForSeconds(explosionDuration);
+
+            StartPostExplosionDialogue();
+        }
+
+        if (reactor != null)
+        {
+            reactor.StartDestruction();
+        }
+    }
+
+    public void StartPostExplosionDialogue()
+    {
+        if (playerController != null)
+        {
+            playerController.enabled = false;
+        }
+
+        dialogueLines = postExplosionDialogueLines;
+        currentLine = 0;
+        dialogueActive = true;
+        isPostExplosionDialogue = true;
+
+        dialogueBalloon.SetActive(true);
+        ShowLine();
+    }
+}
+
+// ReaktÃ¶r yÄ±kÄ±lma sistemi
+public class ReactorDestruction : MonoBehaviour
+{
+    [Header("YÄ±kÄ±lma AyarlarÄ±")]
+    [SerializeField] private float destructionDelay = 2f;
+    [SerializeField] private GameObject debrisPrefab;
+    [SerializeField] private int debrisCount = 20;
+    [SerializeField] private float explosionForce = 10f;
+    [SerializeField] private float debrisLifetime = 3f;
+
+    [Header("Ã‡atlak Sistemi")]
+    [SerializeField] private List<SpriteRenderer> crackSprites;
+    [SerializeField] private float crackInterval = 0.5f;
+
+    [Header("Kamera Sarsma")]
+    [SerializeField] private float shakeIntensity = 0.5f;
+    [SerializeField] private float shakeDuration = 2f;
+
+    [Header("PartikÃ¼ller")]
+    [SerializeField] private ParticleSystem smokeParticles;
+    [SerializeField] private ParticleSystem explosionParticles;
+
+    [Header("Ses")]
+    [SerializeField] private AudioClip reactorSound;
+    [SerializeField] private float reactorSoundVolume = 0.8f;
+
+    private AudioSource audioSource;
+    private SpriteRenderer mainRenderer;
+    private Camera mainCamera;
+
+    void Start()
+    {
+        mainRenderer = GetComponent<SpriteRenderer>();
+        mainCamera = Camera.main;
+
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
+
+        foreach (var crack in crackSprites)
+        {
+            if (crack != null)
+                crack.enabled = false;
+        }
+    }
+
+    public void StartDestruction()
+    {
+        StartCoroutine(DestructionSequence());
+    }
+
+    private IEnumerator DestructionSequence()
+    {
+        if (smokeParticles != null)
+            smokeParticles.Play();
+
+        if (reactorSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(reactorSound, reactorSoundVolume);
+        }
 
         yield return StartCoroutine(ShowCracks());
 

@@ -1,37 +1,42 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement; // Sahne geçişi için eklendi
 
 public class WeatherMachine : MonoBehaviour
 {
-    [Header("Etkile�im")]
+    [Header("Etkileşim")]
     public KeyCode interactKey = KeyCode.E;
-    public TextMeshProUGUI interactionText; // "Kaps�lleri yerle�tir [E]"
+    public TextMeshProUGUI interactionText; // "Kapsülleri yerleştir [E]"
 
-    [Header("Kaps�l Sistemi")]
-    public int requiredCapsules = 3; // Ka� kaps�l gerekli
-    public GameObject[] capsuleSlots; // Kaps�llerin tak�laca�� yerler (g�rsel)
+    [Header("Kapsül Sistemi")]
+    public int requiredCapsules = 3; // Kaç kapsül gerekli
+    public GameObject[] capsuleSlots; // Kapsüllerin takılacağı yerler (görsel)
 
-    [Header("Konu�ma Sistemi")]
+    [Header("Konuşma Sistemi")]
     public DialogueSystem dialogueSystem;
 
-    [Header("Kaps�l Yerle�tirme Konu�malar�")]
+    [Header("Kapsül Yerleştirme Konuşmaları")]
     [TextArea(3, 5)]
     public string[] capsuleDialogues = new string[]
     {
-        "�lk kaps�l� yerle�tirdim.",
+        "İlk kapsülü yerleştirdim.",
         "Bir tane daha...",
-        "Son kaps�l! Hadi bakal�m..."
+        "Son kapsül! Hadi bakalım..."
     };
 
-    [Header("Tamamlama Konu�malar�")]
+    [Header("Tamamlama Konuşmaları")]
     [TextArea(3, 5)]
     public string[] completionDialogues = new string[]
     {
-        "Harika! Cihaz �al��maya ba�lad�!",
+        "Harika! Cihaz çalışmaya başladı!",
         "Hava durumu verileri geliyor...",
-        "Art�k patlamay� tahmin edebilirim!"
+        "Artık patlamayı tahmin edebilirim!"
     };
+
+    [Header("Sahne Geçişi")]
+    public string finishSceneName = "Finish"; // Geçilecek sahne adı
+    public float sceneTransitionDelay = 2f; // Konuşmalar bittikten sonra bekleme süresi
 
     [Header("Ses Efektleri")]
     public AudioClip capsuleInsertSound;
@@ -39,8 +44,8 @@ public class WeatherMachine : MonoBehaviour
 
     [Header("Efektler (Opsiyonel)")]
     public ParticleSystem activationEffect;
-    public GameObject brokenMachine; // Bozuk g�rsel
-    public GameObject fixedMachine; // �al��an g�rsel
+    public GameObject brokenMachine; // Bozuk görsel
+    public GameObject fixedMachine; // Çalışan görsel
 
     private int capsulesInserted = 0;
     private bool playerNearby = false;
@@ -61,7 +66,7 @@ public class WeatherMachine : MonoBehaviour
             interactionText.text = "";
         }
 
-        // Kaps�l slotlar�n� gizle
+        // Kapsül slotlarını gizle
         foreach (GameObject slot in capsuleSlots)
         {
             if (slot != null) slot.SetActive(false);
@@ -109,7 +114,7 @@ public class WeatherMachine : MonoBehaviour
         if (interactionText != null)
         {
             int remaining = requiredCapsules - capsulesInserted;
-            interactionText.text = $"Kaps�lleri yerle�tir ({capsulesInserted}/{requiredCapsules}) [E]";
+            interactionText.text = $"Kapsülleri yerleştir ({capsulesInserted}/{requiredCapsules}) [E]";
         }
     }
 
@@ -125,13 +130,13 @@ public class WeatherMachine : MonoBehaviour
     {
         if (capsulesInserted >= requiredCapsules) return;
 
-        // Kaps�l ses efekti
+        // Kapsül ses efekti
         if (audioSource != null && capsuleInsertSound != null)
         {
             audioSource.PlayOneShot(capsuleInsertSound);
         }
 
-        // Kaps�l slotunu g�ster
+        // Kapsül slotunu göster
         if (capsulesInserted < capsuleSlots.Length && capsuleSlots[capsulesInserted] != null)
         {
             capsuleSlots[capsulesInserted].SetActive(true);
@@ -139,14 +144,14 @@ public class WeatherMachine : MonoBehaviour
 
         capsulesInserted++;
 
-        Debug.Log($"Kaps�l yerle�tirildi: {capsulesInserted}/{requiredCapsules}");
+        Debug.Log($"Kapsül yerleştirildi: {capsulesInserted}/{requiredCapsules}");
 
-        // Player'� durdur ve konu�ma g�ster
+        // Player'ı durdur ve konuşma göster
         StopPlayer();
 
         if (capsulesInserted < requiredCapsules)
         {
-            // Ara konu�ma
+            // Ara konuşma
             if (dialogueSystem != null && capsulesInserted <= capsuleDialogues.Length)
             {
                 string[] singleDialogue = new string[] { capsuleDialogues[capsulesInserted - 1] };
@@ -161,7 +166,7 @@ public class WeatherMachine : MonoBehaviour
         }
         else
         {
-            // T�m kaps�ller yerle�tirildi
+            // Tüm kapsüller yerleştirildi
             HideInteractionPrompt();
             StartCoroutine(CompleteMachine());
         }
@@ -184,15 +189,15 @@ public class WeatherMachine : MonoBehaviour
     {
         machineFixed = true;
 
-        Debug.Log("Cihaz tamamland�!");
+        Debug.Log("Cihaz tamamlandı!");
 
-        // Makine ba�latma sesi
+        // Makine başlatma sesi
         if (audioSource != null && machineStartSound != null)
         {
             audioSource.PlayOneShot(machineStartSound);
         }
 
-        // G�rsel de�i�imi
+        // Görsel değişimi
         if (brokenMachine != null) brokenMachine.SetActive(false);
         if (fixedMachine != null) fixedMachine.SetActive(true);
 
@@ -204,7 +209,7 @@ public class WeatherMachine : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        // Tamamlama konu�malar�
+        // Tamamlama konuşmaları
         if (dialogueSystem != null)
         {
             dialogueSystem.dialogues = completionDialogues;
@@ -215,7 +220,13 @@ public class WeatherMachine : MonoBehaviour
 
         EnablePlayer();
 
-        Debug.Log("Sahne g�revi tamamland�!");
+        Debug.Log("Sahne görevi tamamlandı!");
+
+        // Finish sahnesine geçiş
+        yield return new WaitForSeconds(sceneTransitionDelay);
+
+        Debug.Log($"Finish sahnesine geçiliyor: {finishSceneName}");
+        SceneManager.LoadScene(finishSceneName);
     }
 
     void StopPlayer()

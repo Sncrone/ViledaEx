@@ -247,6 +247,8 @@ MonoBehaviour:
   distanceFromPlayer: 3
   followPlayer: 0
   fadeSpeed: 3
+  portalSound: {fileID: 8300000, guid: 1ed132c5974474f0f802043c5478c425, type: 3}
+  portalSoundVolume: 0.7
 --- !u!61 &221461909
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -349,6 +351,8 @@ MonoBehaviour:
   reactor: {fileID: 0}
   backgroundExplosion: {fileID: 993731221}
   delayBeforeExplosion: 1
+  dialogueSound: {fileID: 8300000, guid: 13188cf56f93e4911b87860ba20ec364, type: 3}
+  dialogueSoundVolume: 0.3
 --- !u!4 &361606930
 Transform:
   m_ObjectHideFlags: 0
@@ -716,7 +720,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InfiniteBackground
   cam: {fileID: 0}
   parallaxEffect: 0
-  cloneCount: 3
+  cloneCount: 0
 --- !u!212 &993731220
 SpriteRenderer:
   serializedVersion: 2
@@ -802,6 +806,8 @@ MonoBehaviour:
   blackScreen: {fileID: 0}
   fadeToBlackDuration: 1
   delayBeforeExplosion: 0.5
+  explosionSound: {fileID: 8300000, guid: f2b391bbfb2574623a329dd96a7150c6, type: 3}
+  explosionSoundVolume: 1
 --- !u!1 &1016170533
 GameObject:
   m_ObjectHideFlags: 0

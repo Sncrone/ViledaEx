@@ -926,7 +926,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1763230048}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f3361a537f341f43b2556999a202019, type: 3}
   m_Name: 
@@ -943,6 +943,8 @@ MonoBehaviour:
   reactor: {fileID: 0}
   backgroundExplosion: {fileID: 0}
   delayBeforeExplosion: 1
+  dialogueSound: {fileID: 8300000, guid: 13188cf56f93e4911b87860ba20ec364, type: 3}
+  dialogueSoundVolume: 0.3
 --- !u!4 &1763230050
 Transform:
   m_ObjectHideFlags: 0
@@ -1140,8 +1142,8 @@ MonoBehaviour:
   - "Harika! Cihaz \uFFFDal\uFFFD\uFFFDmaya ba\uFFFDlad\uFFFD!"
   - Hava durumu verileri geliyor...
   - "Art\uFFFDk patlamay\uFFFD tahmin edebilirim!"
-  capsuleInsertSound: {fileID: 0}
-  machineStartSound: {fileID: 0}
+  capsuleInsertSound: {fileID: 8300000, guid: dea792ed0d4ac4150aae264e95654489, type: 3}
+  machineStartSound: {fileID: 8300000, guid: 98a83fde405d14302853bf81c69326c7, type: 3}
   activationEffect: {fileID: 0}
   brokenMachine: {fileID: 0}
   fixedMachine: {fileID: 0}

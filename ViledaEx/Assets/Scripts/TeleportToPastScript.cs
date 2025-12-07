@@ -8,33 +8,40 @@ public class SimpleTeleport : MonoBehaviour
     
     [Header("Portal Kontrolü")]
     public KeyCode openPortalKey = KeyCode.Q;
-    public Transform player; // Player referansı
+    public Transform player;
     
     [Header("Portal Pozisyonu")]
-    public float distanceFromPlayer = 2f; // Karakterden ne kadar uzakta
-    public bool followPlayer = true; // Player hareket edince portal da hareket etsin mi?
+    public float distanceFromPlayer = 2f;
+    public bool followPlayer = true;
     
     [Header("Animasyon")]
     public float fadeSpeed = 3f;
     
+    [Header("Ses")]
+    public AudioClip portalSound;
+    public float portalSoundVolume = 0.7f;
+    
+    private AudioSource audioSource;
     private bool portalOpen = false;
     private SpriteRenderer portalSprite;
     private Collider2D portalCollider;
     private float currentAlpha = 0f;
-    private bool playerFacingRight = true; // Karakterin yönü
+    private bool playerFacingRight = true;
 
     void Start()
     {
         portalSprite = GetComponent<SpriteRenderer>();
         portalCollider = GetComponent<Collider2D>();
         
-        // Player'ı otomatik bul (eğer atanmadıysa)
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
+        
         if (player == null)
         {
             player = GameObject.FindGameObjectWithTag("Player")?.transform;
         }
         
-        // Başlangıçta şeffaf
         if (portalSprite != null)
         {
             Color c = portalSprite.color;
@@ -48,10 +55,8 @@ public class SimpleTeleport : MonoBehaviour
 
     void Update()
     {
-        // Player yönünü tespit et
         DetectPlayerDirection();
         
-        // Q tuşu kontrolü
         if (Input.GetKeyDown(openPortalKey))
         {
             if (portalOpen)
@@ -60,13 +65,11 @@ public class SimpleTeleport : MonoBehaviour
                 OpenPortal();
         }
         
-        // Portal açıksa pozisyonu güncelle
         if (portalOpen && followPlayer && player != null)
         {
             UpdatePortalPosition();
         }
         
-        // Fade animasyonu
         AnimatePortal();
     }
 
@@ -74,7 +77,6 @@ public class SimpleTeleport : MonoBehaviour
     {
         if (player == null) return;
         
-        // Karakterin scale'inden yönü anla
         playerFacingRight = player.localScale.x > 0;
     }
 
@@ -83,7 +85,11 @@ public class SimpleTeleport : MonoBehaviour
         portalOpen = true;
         Debug.Log("Portal açılıyor...");
         
-        // Portal'ı player'ın önüne yerleştir
+        if (portalSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(portalSound, portalSoundVolume);
+        }
+        
         UpdatePortalPosition();
     }
 
@@ -97,7 +103,6 @@ public class SimpleTeleport : MonoBehaviour
     {
         if (player == null) return;
         
-        // Karakterin yönüne göre portal pozisyonu
         float direction = playerFacingRight ? 1f : -1f;
         Vector3 portalPos = player.position + new Vector3(direction * distanceFromPlayer, 0, 0);
         
@@ -115,7 +120,6 @@ public class SimpleTeleport : MonoBehaviour
         c.a = currentAlpha;
         portalSprite.color = c;
         
-        // Collider kontrolü
         if (portalCollider != null)
         {
             portalCollider.enabled = currentAlpha > 0.9f;

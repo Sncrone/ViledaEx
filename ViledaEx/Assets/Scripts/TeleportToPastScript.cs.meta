@@ -1,2 +1,13 @@
 fileFormatVersion: 2
 guid: 1cb16c66ad0934c4da2dae0f65284a08
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - player: {instanceID: 0}
+  - portalSound: {fileID: 8300000, guid: 1ed132c5974474f0f802043c5478c425, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

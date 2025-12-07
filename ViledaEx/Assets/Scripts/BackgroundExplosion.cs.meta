@@ -1,2 +1,15 @@
 fileFormatVersion: 2
 guid: 1a15cfe808d215c46868943d4efb4900
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - backgroundSprite: {instanceID: 0}
+  - flashOverlay: {instanceID: 0}
+  - blackScreen: {instanceID: 0}
+  - explosionSound: {fileID: 8300000, guid: f2b391bbfb2574623a329dd96a7150c6, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
