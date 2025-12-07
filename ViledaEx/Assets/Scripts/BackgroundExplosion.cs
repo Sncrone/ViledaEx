@@ -1,13 +1,13 @@
-using UnityEngine;
+/*using UnityEngine;
 using System.Collections;
 
 public class BackgroundExplosion : MonoBehaviour
 {
-    [Header("Background Referansý")]
+    [Header("Background Referansï¿½")]
     [SerializeField] private SpriteRenderer backgroundSprite;
 
-    [Header("Patlama Ayarlarý")]
-    [SerializeField] private int gridWidth = 8; // Kaça kaç parçaya bölünecek
+    [Header("Patlama Ayarlarï¿½")]
+    [SerializeField] private int gridWidth = 8; // Kaï¿½a kaï¿½ parï¿½aya bï¿½lï¿½necek
     [SerializeField] private int gridHeight = 6;
     [SerializeField] private float explosionForce = 15f;
     [SerializeField] private float pieceLifetime = 3f;
@@ -15,15 +15,15 @@ public class BackgroundExplosion : MonoBehaviour
     [Header("Kamera Efektleri")]
     [SerializeField] private float shakeIntensity = 1f;
     [SerializeField] private float shakeDuration = 2f;
-    [SerializeField] private int shakeCount = 3; // Kaç defa sarsýlacak
+    [SerializeField] private int shakeCount = 3; // Kaï¿½ defa sarsï¿½lacak
 
     [Header("Flash Efekti")]
-    [SerializeField] private SpriteRenderer flashOverlay; // Beyaz flash için
+    [SerializeField] private SpriteRenderer flashOverlay; // Beyaz flash iï¿½in
     [SerializeField] private float flashDuration = 0.2f;
     [SerializeField] private int flashCount = 3;
 
     [Header("Siyah Ekran")]
-    [SerializeField] private SpriteRenderer blackScreen; // Patlama sonrasý siyah ekran
+    [SerializeField] private SpriteRenderer blackScreen; // Patlama sonrasï¿½ siyah ekran
     [SerializeField] private float fadeToBlackDuration = 1f;
 
     [Header("Timing")]
@@ -35,7 +35,7 @@ public class BackgroundExplosion : MonoBehaviour
     {
         mainCamera = Camera.main;
 
-        // Flash overlay yoksa oluþtur
+        // Flash overlay yoksa oluï¿½tur
         if (flashOverlay == null)
         {
             CreateFlashOverlay();
@@ -45,7 +45,7 @@ public class BackgroundExplosion : MonoBehaviour
             flashOverlay.enabled = false;
         }
 
-        // Siyah ekran yoksa oluþtur
+        // Siyah ekran yoksa oluï¿½tur
         if (blackScreen == null)
         {
             CreateBlackScreen();
@@ -58,54 +58,54 @@ public class BackgroundExplosion : MonoBehaviour
 
     private void CreateFlashOverlay()
     {
-        // Yeni GameObject oluþtur
+        // Yeni GameObject oluï¿½tur
         GameObject flashObj = new GameObject("FlashOverlay");
         flashOverlay = flashObj.AddComponent<SpriteRenderer>();
 
-        // Beyaz texture oluþtur
+        // Beyaz texture oluï¿½tur
         Texture2D tex = new Texture2D(1, 1);
         tex.SetPixel(0, 0, Color.white);
         tex.Apply();
 
-        // Sprite oluþtur
+        // Sprite oluï¿½tur
         Sprite whiteSprite = Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 1);
         flashOverlay.sprite = whiteSprite;
 
-        // Kamerayý kaplasýn
+        // Kamerayï¿½ kaplasï¿½n
         float height = mainCamera.orthographicSize * 2f;
         float width = height * mainCamera.aspect;
         flashOverlay.transform.localScale = new Vector3(width, height, 1);
         flashOverlay.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, 0);
 
-        // En üstte görünsün
+        // En ï¿½stte gï¿½rï¿½nsï¿½n
         flashOverlay.sortingOrder = 1000;
         flashOverlay.enabled = false;
     }
 
     private void CreateBlackScreen()
     {
-        // Yeni GameObject oluþtur
+        // Yeni GameObject oluï¿½tur
         GameObject blackObj = new GameObject("BlackScreen");
         blackScreen = blackObj.AddComponent<SpriteRenderer>();
 
-        // Siyah texture oluþtur
+        // Siyah texture oluï¿½tur
         Texture2D tex = new Texture2D(1, 1);
         tex.SetPixel(0, 0, Color.black);
         tex.Apply();
 
-        // Sprite oluþtur
+        // Sprite oluï¿½tur
         Sprite blackSprite = Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 1);
         blackScreen.sprite = blackSprite;
 
-        // Kamerayý kaplasýn
+        // Kamerayï¿½ kaplasï¿½n
         float height = mainCamera.orthographicSize * 2f;
         float width = height * mainCamera.aspect;
         blackScreen.transform.localScale = new Vector3(width, height, 1);
         blackScreen.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, 0);
 
-        // En üstte görünsün (flash'tan bile üstte)
+        // En ï¿½stte gï¿½rï¿½nsï¿½n (flash'tan bile ï¿½stte)
         blackScreen.sortingOrder = 1001;
-        blackScreen.color = new Color(0, 0, 0, 0); // Baþta görünmez
+        blackScreen.color = new Color(0, 0, 0, 0); // Baï¿½ta gï¿½rï¿½nmez
         blackScreen.enabled = false;
     }
 
@@ -132,19 +132,19 @@ public class BackgroundExplosion : MonoBehaviour
         StartCoroutine(ExplosionSequence());
     }
 
-    // Toplam patlama süresini hesapla
+    // Toplam patlama sï¿½resini hesapla
     public float GetTotalExplosionDuration()
     {
-        float preShake = 1f; // PreExplosionShake süresi
+        float preShake = 1f; // PreExplosionShake sï¿½resi
         float mainExplosion = delayBeforeExplosion;
         float fadeTime = fadeToBlackDuration;
 
-        return preShake + mainExplosion + fadeTime + 0.5f; // Küçük buffer
+        return preShake + mainExplosion + fadeTime + 0.5f; // Kï¿½ï¿½ï¿½k buffer
     }
 
     private IEnumerator ExplosionSequence()
     {
-        // 1. Ön titreþim
+        // 1. ï¿½n titreï¿½im
         yield return StartCoroutine(PreExplosionShake());
 
         // 2. Flash efektleri
@@ -159,7 +159,7 @@ public class BackgroundExplosion : MonoBehaviour
         if (backgroundSprite != null)
             backgroundSprite.enabled = false;
 
-        // 5. Direkt siyah ekrana geçiþ
+        // 5. Direkt siyah ekrana geï¿½iï¿½
         yield return StartCoroutine(FadeToBlack());
     }
 
@@ -194,7 +194,7 @@ public class BackgroundExplosion : MonoBehaviour
 
         for (int i = 0; i < flashCount; i++)
         {
-            // Flash aç
+            // Flash aï¿½
             flashOverlay.enabled = true;
             flashOverlay.color = new Color(1, 1, 1, 1);
 
@@ -243,7 +243,7 @@ public class BackgroundExplosion : MonoBehaviour
         Sprite sprite = backgroundSprite.sprite;
         Texture2D texture = sprite.texture;
 
-        // Background'un dünya pozisyonunu ve boyutunu al
+        // Background'un dï¿½nya pozisyonunu ve boyutunu al
         Bounds bounds = backgroundSprite.bounds;
         Vector3 center = bounds.center;
         float width = bounds.size.x;
@@ -252,17 +252,17 @@ public class BackgroundExplosion : MonoBehaviour
         float pieceWidth = width / gridWidth;
         float pieceHeight = height / gridHeight;
 
-        // Her parça için
+        // Her parï¿½a iï¿½in
         for (int x = 0; x < gridWidth; x++)
         {
             for (int y = 0; y < gridHeight; y++)
             {
-                // Parça pozisyonu hesapla
+                // Parï¿½a pozisyonu hesapla
                 float posX = center.x - (width / 2f) + (x * pieceWidth) + (pieceWidth / 2f);
                 float posY = center.y - (height / 2f) + (y * pieceHeight) + (pieceHeight / 2f);
                 Vector3 piecePos = new Vector3(posX, posY, 0);
 
-                // Parça oluþtur
+                // Parï¿½a oluï¿½tur
                 GameObject piece = new GameObject($"BackgroundPiece_{x}_{y}");
                 piece.transform.position = piecePos;
 
@@ -271,7 +271,7 @@ public class BackgroundExplosion : MonoBehaviour
                 sr.sprite = sprite;
                 sr.sortingOrder = backgroundSprite.sortingOrder;
 
-                // Sadece bu parçanýn bölgesini göster
+                // Sadece bu parï¿½anï¿½n bï¿½lgesini gï¿½ster
                 sr.drawMode = SpriteDrawMode.Sliced;
                 sr.size = new Vector2(pieceWidth, pieceHeight);
 
@@ -289,6 +289,303 @@ public class BackgroundExplosion : MonoBehaviour
                 StartCoroutine(FadePiece(sr, pieceLifetime));
 
                 // Otomatik yok et
+                Destroy(piece, pieceLifetime);
+            }
+        }
+    }
+
+    private IEnumerator FadePiece(SpriteRenderer sr, float lifetime)
+    {
+        yield return new WaitForSeconds(lifetime * 0.7f);
+
+        float fadeTime = lifetime * 0.3f;
+        float elapsed = 0f;
+        Color originalColor = sr.color;
+
+        while (elapsed < fadeTime)
+        {
+            float alpha = Mathf.Lerp(1f, 0f, elapsed / fadeTime);
+            sr.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+    }
+}*/
+using UnityEngine;
+using System.Collections;
+
+public class BackgroundExplosion : MonoBehaviour
+{
+    [Header("Background ReferansÄ±")]
+    [SerializeField] private SpriteRenderer backgroundSprite;
+
+    [Header("Patlama AyarlarÄ±")]
+    [SerializeField] private int gridWidth = 8;
+    [SerializeField] private int gridHeight = 6;
+    [SerializeField] private float explosionForce = 15f;
+    [SerializeField] private float pieceLifetime = 3f;
+
+    [Header("Kamera Efektleri")]
+    [SerializeField] private float shakeIntensity = 1f;
+    [SerializeField] private float shakeDuration = 2f;
+    [SerializeField] private int shakeCount = 3;
+
+    [Header("Flash Efekti")]
+    [SerializeField] private SpriteRenderer flashOverlay;
+    [SerializeField] private float flashDuration = 0.2f;
+    [SerializeField] private int flashCount = 3;
+
+    [Header("Siyah Ekran")]
+    [SerializeField] private SpriteRenderer blackScreen;
+    [SerializeField] private float fadeToBlackDuration = 1f;
+
+    [Header("Timing")]
+    [SerializeField] private float delayBeforeExplosion = 0.5f;
+
+    [Header("Ses")]
+    [SerializeField] private AudioClip explosionSound;
+    [SerializeField] private float explosionSoundVolume = 1f;
+
+    private AudioSource audioSource;
+    private Camera mainCamera;
+
+    void Start()
+    {
+        mainCamera = Camera.main;
+
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
+
+        if (flashOverlay == null)
+        {
+            CreateFlashOverlay();
+        }
+        else
+        {
+            flashOverlay.enabled = false;
+        }
+
+        if (blackScreen == null)
+        {
+            CreateBlackScreen();
+        }
+        else
+        {
+            blackScreen.enabled = false;
+        }
+    }
+
+    private void CreateFlashOverlay()
+    {
+        GameObject flashObj = new GameObject("FlashOverlay");
+        flashOverlay = flashObj.AddComponent<SpriteRenderer>();
+
+        Texture2D tex = new Texture2D(1, 1);
+        tex.SetPixel(0, 0, Color.white);
+        tex.Apply();
+
+        Sprite whiteSprite = Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 1);
+        flashOverlay.sprite = whiteSprite;
+
+        float height = mainCamera.orthographicSize * 2f;
+        float width = height * mainCamera.aspect;
+        flashOverlay.transform.localScale = new Vector3(width, height, 1);
+        flashOverlay.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, 0);
+
+        flashOverlay.sortingOrder = 1000;
+        flashOverlay.enabled = false;
+    }
+
+    private void CreateBlackScreen()
+    {
+        GameObject blackObj = new GameObject("BlackScreen");
+        blackScreen = blackObj.AddComponent<SpriteRenderer>();
+
+        Texture2D tex = new Texture2D(1, 1);
+        tex.SetPixel(0, 0, Color.black);
+        tex.Apply();
+
+        Sprite blackSprite = Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 1);
+        blackScreen.sprite = blackSprite;
+
+        float height = mainCamera.orthographicSize * 2f;
+        float width = height * mainCamera.aspect;
+        blackScreen.transform.localScale = new Vector3(width, height, 1);
+        blackScreen.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, 0);
+
+        blackScreen.sortingOrder = 1001;
+        blackScreen.color = new Color(0, 0, 0, 0);
+        blackScreen.enabled = false;
+    }
+
+    private IEnumerator FadeToBlack()
+    {
+        if (blackScreen == null) yield break;
+
+        blackScreen.enabled = true;
+        float elapsed = 0f;
+
+        while (elapsed < fadeToBlackDuration)
+        {
+            float alpha = Mathf.Lerp(0f, 1f, elapsed / fadeToBlackDuration);
+            blackScreen.color = new Color(0, 0, 0, alpha);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        blackScreen.color = Color.black;
+    }
+
+    public void TriggerExplosion()
+    {
+        StartCoroutine(ExplosionSequence());
+    }
+
+    public float GetTotalExplosionDuration()
+    {
+        float preShake = 1f;
+        float mainExplosion = delayBeforeExplosion;
+        float fadeTime = fadeToBlackDuration;
+
+        return preShake + mainExplosion + fadeTime + 0.5f;
+    }
+
+    private IEnumerator ExplosionSequence()
+    {
+        yield return StartCoroutine(PreExplosionShake());
+
+        StartCoroutine(FlashEffect());
+
+        StartCoroutine(CameraShake());
+
+        yield return new WaitForSeconds(delayBeforeExplosion);
+
+        if (backgroundSprite != null)
+            backgroundSprite.enabled = false;
+
+        yield return StartCoroutine(FadeToBlack());
+    }
+
+    private IEnumerator PreExplosionShake()
+    {
+        if (explosionSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(explosionSound, explosionSoundVolume);
+        }
+
+        Vector3 originalPos = mainCamera.transform.position;
+        float duration = 1f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            float intensity = Mathf.Lerp(0.1f, 0.5f, elapsed / duration);
+            float x = Random.Range(-1f, 1f) * intensity;
+            float y = Random.Range(-1f, 1f) * intensity;
+
+            mainCamera.transform.position = new Vector3(
+                originalPos.x + x,
+                originalPos.y + y,
+                originalPos.z
+            );
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        mainCamera.transform.position = originalPos;
+    }
+
+    private IEnumerator FlashEffect()
+    {
+        if (flashOverlay == null) yield break;
+
+        for (int i = 0; i < flashCount; i++)
+        {
+            flashOverlay.enabled = true;
+            flashOverlay.color = new Color(1, 1, 1, 1);
+
+            yield return new WaitForSeconds(flashDuration);
+
+            flashOverlay.enabled = false;
+
+            yield return new WaitForSeconds(flashDuration * 0.5f);
+        }
+    }
+
+    private IEnumerator CameraShake()
+    {
+        Vector3 originalPos = mainCamera.transform.position;
+
+        for (int i = 0; i < shakeCount; i++)
+        {
+            float currentIntensity = shakeIntensity * (1f - (i / (float)shakeCount));
+            float elapsed = 0f;
+            float duration = shakeDuration / shakeCount;
+
+            while (elapsed < duration)
+            {
+                float x = Random.Range(-1f, 1f) * currentIntensity;
+                float y = Random.Range(-1f, 1f) * currentIntensity;
+
+                mainCamera.transform.position = new Vector3(
+                    originalPos.x + x,
+                    originalPos.y + y,
+                    originalPos.z
+                );
+
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+        }
+
+        mainCamera.transform.position = originalPos;
+    }
+
+    private void ShatterBackground()
+    {
+        if (backgroundSprite == null) return;
+
+        Sprite sprite = backgroundSprite.sprite;
+        Texture2D texture = sprite.texture;
+
+        Bounds bounds = backgroundSprite.bounds;
+        Vector3 center = bounds.center;
+        float width = bounds.size.x;
+        float height = bounds.size.y;
+
+        float pieceWidth = width / gridWidth;
+        float pieceHeight = height / gridHeight;
+
+        for (int x = 0; x < gridWidth; x++)
+        {
+            for (int y = 0; y < gridHeight; y++)
+            {
+                float posX = center.x - (width / 2f) + (x * pieceWidth) + (pieceWidth / 2f);
+                float posY = center.y - (height / 2f) + (y * pieceHeight) + (pieceHeight / 2f);
+                Vector3 piecePos = new Vector3(posX, posY, 0);
+
+                GameObject piece = new GameObject($"BackgroundPiece_{x}_{y}");
+                piece.transform.position = piecePos;
+
+                SpriteRenderer sr = piece.AddComponent<SpriteRenderer>();
+                sr.sprite = sprite;
+                sr.sortingOrder = backgroundSprite.sortingOrder;
+
+                sr.drawMode = SpriteDrawMode.Sliced;
+                sr.size = new Vector2(pieceWidth, pieceHeight);
+
+                Rigidbody2D rb = piece.AddComponent<Rigidbody2D>();
+                rb.gravityScale = 1f;
+
+                Vector2 direction = (piecePos - center).normalized;
+                direction += new Vector2(Random.Range(-0.3f, 0.3f), Random.Range(-0.3f, 0.3f));
+                rb.AddForce(direction * explosionForce, ForceMode2D.Impulse);
+                rb.angularVelocity = Random.Range(-360f, 360f);
+
+                StartCoroutine(FadePiece(sr, pieceLifetime));
+
                 Destroy(piece, pieceLifetime);
             }
         }

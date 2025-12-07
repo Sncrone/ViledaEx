@@ -628,7 +628,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 560350183}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f3361a537f341f43b2556999a202019, type: 3}
   m_Name: 
@@ -645,6 +645,8 @@ MonoBehaviour:
   reactor: {fileID: 0}
   backgroundExplosion: {fileID: 0}
   delayBeforeExplosion: 1
+  dialogueSound: {fileID: 8300000, guid: 13188cf56f93e4911b87860ba20ec364, type: 3}
+  dialogueSoundVolume: 0.3
 --- !u!4 &560350185
 Transform:
   m_ObjectHideFlags: 0
@@ -701,7 +703,7 @@ MonoBehaviour:
   - "Nas\u0131l oldu bu? Hemen bu i\u015Fi d\xFCzeltmeliyim."
   typingSpeed: 0.05
   nextKey: 32
-  typingSound: {fileID: 0}
+  typingSound: {fileID: 8300000, guid: 13188cf56f93e4911b87860ba20ec364, type: 3}
 --- !u!114 &589551055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -726,6 +728,8 @@ MonoBehaviour:
   reactor: {fileID: 0}
   backgroundExplosion: {fileID: 0}
   delayBeforeExplosion: 1
+  dialogueSound: {fileID: 8300000, guid: 13188cf56f93e4911b87860ba20ec364, type: 3}
+  dialogueSoundVolume: 0.3
 --- !u!4 &589551056
 Transform:
   m_ObjectHideFlags: 0
@@ -1993,6 +1997,8 @@ MonoBehaviour:
   distanceFromPlayer: 3
   followPlayer: 0
   fadeSpeed: 3
+  portalSound: {fileID: 8300000, guid: 1ed132c5974474f0f802043c5478c425, type: 3}
+  portalSoundVolume: 0.7
 --- !u!61 &2098612314
 BoxCollider2D:
   m_ObjectHideFlags: 0
