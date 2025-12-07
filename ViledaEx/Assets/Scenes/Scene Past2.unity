@@ -598,8 +598,8 @@ Transform:
   m_GameObject: {fileID: 416053244}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.85, y: -2.9028, z: 0}
-  m_LocalScale: {x: 0.31833372, y: 0.31833372, z: 0.31833372}
+  m_LocalPosition: {x: 6.68, y: -2.71, z: 0}
+  m_LocalScale: {x: 0.22802244, y: 0.22802244, z: 0.22802244}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -638,8 +638,8 @@ MonoBehaviour:
   player: {fileID: 657421952}
   typingSpeed: 0.05
   dialogueLines:
-  - "Tamam reakt\xF6r\xFCn patlama an\u0131na geldik."
-  - "Bakal\u0131m ne olmu\u015F?"
+  - Tamam reaktorun patlama anina geldik.
+  - Bakalim ne olmus?
   postExplosionDialogueLines:
   - Hay aksi! Biraz daha geriye gitmeliyim.
   reactor: {fileID: 0}
@@ -966,8 +966,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21.1
-  m_fontSizeBase: 21.1
+  m_fontSize: 19
+  m_fontSizeBase: 19
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1035,8 +1035,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 47}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 2.4607, y: 44.8127}
+  m_SizeDelta: {x: 231.1679, y: 54.3745}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1162584686
 GameObject:
@@ -1275,11 +1275,14 @@ MonoBehaviour:
   interactionKey: 101
   dialogueSystem: {fileID: 589551054}
   dialogues:
-  - Ohh! sonunda tamir edebildim.
-  - Simdi sira buna neden olan kaynakta.
-  - "Ya\u011Fmur ya\u011Fmadan \xF6nce bunun ya\u011Fmur tahmin cihazlar\u0131 taraf\u0131ndan
-    tahmin edilmesi gerekiyordu"
-  - "Yagmur tahmin cihazi bozulmus olabilir mi? Bakal\u0131m."
+  - "Ohh\u2026 sonunda tamir isini hallettim. Ama bu sadece baslang\u0131c"
+  - "\u015Eimdi sira bu felaketin as\u0131l kaynag\u0131n\u0131 bulmakta\u2026"
+  - "Bir dakika\u2026 Bu sizinti nasil oldu boyle?"
+  - Eger yagmur baslamadan once bu sizinti tespit edilseydi
+  - "reaktor asla asiri yuklenmezdi\u2026"
+  - "Demek sorun buymus\u2026  "
+  - Yagmur tahmin cihazi bozulmus olabilir!
+  - ' Hemen kontrol etmeliyim.'
   interactionPrompt: {fileID: 0}
   interactionSound: {fileID: 0}
 --- !u!1 &1281434276
@@ -1317,8 +1320,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 72, y: 3}
-  m_SizeDelta: {x: 243.6591, y: 231.77}
+  m_AnchoredPosition: {x: 41, y: 18.5}
+  m_SizeDelta: {x: 305.6591, y: 262.77}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1281434278
 MonoBehaviour:
@@ -1423,8 +1426,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21.1
-  m_fontSizeBase: 21.1
+  m_fontSize: 19
+  m_fontSizeBase: 19
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1856,8 +1859,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -647, y: 3}
-  m_SizeDelta: {x: 243.6591, y: 231.77}
+  m_AnchoredPosition: {x: -648.1887, y: 23.617706}
+  m_SizeDelta: {x: 287.0098, y: 273.0054}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1947443272
 MonoBehaviour:

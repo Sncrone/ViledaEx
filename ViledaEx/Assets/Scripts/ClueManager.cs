@@ -5,14 +5,14 @@ public class ClueManager : MonoBehaviour
 {
     public static ClueManager Instance;
 
-    [Header("Ýpucu Ayarlarý")]
+    [Header("Ipucu Ayarlari")]
     public int totalClues = 3;
     private int collectedClues = 0;
 
     [Header("UI")]
     public TextMeshProUGUI clueText;
 
-    [Header("Geçiþ Ayarlarý")]
+    [Header("Gecis Ayarlari")]
     public bool autoTravelToPast = true;
     public float delayBeforeTravel = 2f;
     public string targetYear = "2045";
@@ -32,7 +32,7 @@ public class ClueManager : MonoBehaviour
         collectedClues++;
         UpdateUI();
 
-        Debug.Log("Ýpucu toplandý! Toplam: " + collectedClues + "/" + totalClues);
+        Debug.Log("Ipucu toplandi! Toplam: " + collectedClues + "/" + totalClues);
 
         if (collectedClues >= totalClues)
         {
@@ -44,13 +44,13 @@ public class ClueManager : MonoBehaviour
     {
         if (clueText != null)
         {
-            clueText.text = "Ýpuçlarý: " + collectedClues + "/" + totalClues;
+            clueText.text = "Ipuclari: " + collectedClues + "/" + totalClues;
         }
     }
 
     void AllCluesCollected()
     {
-        Debug.Log("Tüm ipuçlarý toplandý! Geçmiþe gidiliyor...");
+        Debug.Log("Tüm ipuclari toplandi! Gecmise gidiliyor...");
 
         if (autoTravelToPast)
         {

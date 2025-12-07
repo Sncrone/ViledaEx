@@ -342,8 +342,8 @@ MonoBehaviour:
   player: {fileID: 699360358}
   typingSpeed: 0.05
   dialogueLines:
-  - "Tamam reakt\xF6r\xFCn patlama an\u0131na geldik."
-  - "Bakal\u0131m ne olmu\u015F?"
+  - "Tamam reaktorun patlama an\u0131na geldik."
+  - "Bakal\u0131m ne olmus?"
   postExplosionDialogueLines:
   - Hay aksi! Biraz daha geriye gitmeliyim.
   reactor: {fileID: 0}

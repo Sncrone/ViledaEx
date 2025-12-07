@@ -1811,8 +1811,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -784.0268, y: -457.2101}
-  m_SizeDelta: {x: 297.9464, y: 48.4202}
+  m_AnchoredPosition: {x: -679, y: -480}
+  m_SizeDelta: {x: 497.4521, y: 91.6592}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1402964379
 MonoBehaviour:
@@ -1834,7 +1834,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '''E'' Tusuna Bas'
+  m_text: Kapsulu almak icin 'E' Tusuna Bas
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cc6ffe3d6a3cf094fa250d67231ae3c0, type: 2}
   m_sharedMaterial: {fileID: -8314339543689622595, guid: cc6ffe3d6a3cf094fa250d67231ae3c0, type: 2}
@@ -1861,8 +1861,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 34
+  m_fontSizeBase: 34
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2038,9 +2038,13 @@ MonoBehaviour:
   playerTransform: {fileID: 1457769936}
   balloonOffset: {x: 0, y: 2, z: 0}
   dialogues:
-  - Hay aksi! Bu da neydi?
-  - Hayir olamaz! Reaktorden mi geldi bu patlama?
-  - "Nas\u0131l oldu bu? Hemen bu isi duzeltmeliyim."
+  - "Ne\u2026 ne oluyor? Yerin alti mi titredi az once?"
+  - "Olamaz\u2026 Bu patlama reaktorden mi geldi!? "
+  - "Boyle bir sey mumkun degil\u2026"
+  - "Bu nasil oldu? Boyle bir sizinti olamazdi\u2026 "
+  - Birisi zaman cizgisini bozmus olmali!
+  - "Bunu duzeltmem gerek\u2026 "
+  - Yoksa gelecekte her sey yok olacak.
   typingSpeed: 0.05
   nextKey: 32
   typingSound: {fileID: 0}
@@ -2094,8 +2098,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 4.4937, y: -119.8515}
-  m_SizeDelta: {x: 243.6591, y: 231.77}
+  m_AnchoredPosition: {x: 3.2207, y: -130.35}
+  m_SizeDelta: {x: 321.6187, y: 282.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1605115975
 MonoBehaviour:
