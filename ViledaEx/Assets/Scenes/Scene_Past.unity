@@ -187,7 +187,10 @@ MonoBehaviour:
   dialogueLines:
   - "Tamam reakt\xF6r\xFCn patlama an\u0131na geldik."
   - "Bakal\u0131m ne olmu\u015F?"
+  postExplosionDialogueLines:
+  - Hay aksi! Biraz daha geriye gitmeliyim.
   reactor: {fileID: 0}
+  backgroundExplosion: {fileID: 993731221}
   delayBeforeExplosion: 1
 --- !u!4 &361606930
 Transform:
@@ -201,7 +204,8 @@ Transform:
   m_LocalPosition: {x: 0.84376, y: 1.42776, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1016170537}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &671609791
@@ -532,7 +536,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 993731217}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8525667e239e249eeb45539e0af1fabf, type: 3}
   m_Name: 
@@ -622,6 +626,8 @@ MonoBehaviour:
   flashOverlay: {fileID: 0}
   flashDuration: 0.2
   flashCount: 3
+  blackScreen: {fileID: 0}
+  fadeToBlackDuration: 1
   delayBeforeExplosion: 0.5
 --- !u!1 &1016170533
 GameObject:
@@ -718,7 +724,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 671609792}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 361606930}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1016,5 +1022,4 @@ SceneRoots:
   - {fileID: 149469322}
   - {fileID: 699360357}
   - {fileID: 361606930}
-  - {fileID: 1016170537}
   - {fileID: 1787182727}

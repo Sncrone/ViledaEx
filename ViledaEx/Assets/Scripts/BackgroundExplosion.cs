@@ -56,16 +56,6 @@ public class BackgroundExplosion : MonoBehaviour
         }
     }
 
-    // TEST ÝÇÝN - E tuþuna basýnca patlat
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Debug.Log("E tuþuna basýldý - Patlama baþlýyor!");
-            TriggerExplosion();
-        }
-    }
-
     private void CreateFlashOverlay()
     {
         // Yeni GameObject oluþtur
