@@ -501,6 +501,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3330664462096217750, guid: ebe58c4e7b90948cc91f26e09413079c, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3330664462096217750, guid: ebe58c4e7b90948cc91f26e09413079c, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3330664462096217750, guid: ebe58c4e7b90948cc91f26e09413079c, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3330664462096217750, guid: ebe58c4e7b90948cc91f26e09413079c, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4631289645308050029, guid: ebe58c4e7b90948cc91f26e09413079c, type: 3}
       propertyPath: m_Name
       value: Player
@@ -750,12 +766,12 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 3406425062075856593, guid: b57158b4e1b2e40a98ae35e5229ba69f, type: 3}
+  m_Sprite: {fileID: -8497809120679711375, guid: 3257dd7b99eb11740bf0c8645e08a122, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 3.52, y: 1.92}
+  m_Size: {x: 16, y: 8.93}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
